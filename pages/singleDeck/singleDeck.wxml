@@ -1,0 +1,34 @@
+<view wx:if="{{isLoading}}"></view>
+<view wx:else class="container">
+  <view class="cardList">
+    <view class="classCardList">
+      <text>职业卡 ({{classCardLength}})</text>
+      <view class="card" wx:for="{{classCardsRes}}">
+        <text class="cardCost {{item.rarity}}">{{item.cost}}</text>
+        <view class="cardNameBg">
+          <text class="cardName">{{item.name}}</text>
+          <image class="cardImg" src="https://art.hearthstonejson.com/v1/tiles/{{item.id}}.png" bindload="cardOnLoad"></image>
+        </view>
+        <text class="cardCopy">{{item.copy}}</text>
+      </view>
+    </view>
+    <view class="neutralCardList">
+      <text>中立卡 ({{neutralCardsLength}})</text>
+      <view class="card" wx:for="{{neutralCardsRes}}">
+        <text class="cardCost {{item.rarity}}">{{item.cost}}</text>
+        <view class="cardNameBg">
+          <text class="cardName">{{item.name}}</text>
+          <image class="cardImg" src="https://art.hearthstonejson.com/v1/tiles/{{item.id}}.png" bindload="cardOnLoad"></image>
+        </view>
+        <text class="cardCopy">{{item.copy}}</text>
+      </view>
+    </view>
+  </view>
+  <view class="bottomView">
+    <button bindtap="copyCode">
+      <text class="iconfont icon-fuzhicopy22"></text> 复制卡组</button>
+    <button open-type="share">
+      <text class="iconfont icon-fenxiang"></text> 分享卡组</button>
+  </view>
+</view>
+<canvas style="width:{{gWidth}}px;height: {{gWidth+80}}px;border:1px solid red" canvas-id="typeCanvas"></canvas>

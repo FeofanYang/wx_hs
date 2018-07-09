@@ -1,0 +1,3 @@
+<text>src/pages/report/report.wxml</text>
+<input type='text' bindblur="bindKeyInput" maxlength="-1" style="border:1px solid #000;height:600rpx;"></input>
+<button bindtap="analyzeCode">解析代码</button>
