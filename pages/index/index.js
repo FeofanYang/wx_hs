@@ -7,7 +7,7 @@ Page({
   data: {
     imgUrls: [{
         title: "时光酒馆特别活动现已上线",
-        url: "/images/swiperImg01.png",
+        url: "/images/swiperImg02.jpg",
       },
       {
         title: "冒险任务“怪物狩猎”已开放",
@@ -57,20 +57,20 @@ Page({
     ],
     hotdecks: [{
         name: "任务战",
-        leftImg: "/images/swiperImg01.png",
+        leftImg: "/images/swiperImg02.jpg",
         rightImg: "/images/swiperImg02.jpg",
         cost: "12000"
       },
       {
         name: "任务战2",
-        leftImg: "/images/swiperImg01.png",
+        leftImg: "/images/swiperImg02.jpg",
         rightImg: "/images/swiperImg03.jpg",
         cost: "24000"
       }
     ],
     newsData: [{
         title: "今天友谊赛可获得 200 金币",
-        image: "/images/swiperImg01.png"
+        image: "/images/swiperImg02.jpg"
       },
       {
         title: "黄金公开赛xx站火热报名中",

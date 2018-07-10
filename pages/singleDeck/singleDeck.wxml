@@ -1,6 +1,6 @@
 <view wx:if="{{isLoading}}"></view>
 <view wx:else class="container">
-  <view class="cardList">
+  <view class="cardList" id="cardList">
     <view class="classCardList">
       <text>职业卡 ({{classCardLength}})</text>
       <view class="card" wx:for="{{classCardsRes}}">
@@ -24,6 +24,27 @@
       </view>
     </view>
   </view>
+  <view>tabbar 下面分类展示信息</view>
+  <view class="deckInfo">
+    <view>
+      <text>费用曲线</text>
+      <view class="cost">
+        <view class="item" wx:for="{{costData.arr}}">
+          <text class="count">{{item}}</text>
+          <view class='col' style="height:{{item / costData.max * 100}}%"></view>
+          <text class="index">{{index}}</text>
+        </view>
+      </view>
+    </view>
+    <view>
+      <text>卡牌种类分布</text>
+      <canvas canvas-id="typeCanvas" style="width:{{gWidth}}px;height: {{gWidth*0.5}}px;"></canvas>
+    </view>
+    <view>
+      <text>稀有度分布</text>
+      <canvas canvas-id="rarityCanvas" style="width:{{gWidth}}px;height: {{gWidth*0.5}}px;"></canvas>
+    </view>
+  </view>
   <view class="bottomView">
     <button bindtap="copyCode">
       <text class="iconfont icon-fuzhicopy22"></text> 复制卡组</button>
@@ -31,4 +52,3 @@
       <text class="iconfont icon-fenxiang"></text> 分享卡组</button>
   </view>
 </view>
-<canvas style="width:{{gWidth}}px;height: {{gWidth+80}}px;border:1px solid red" canvas-id="typeCanvas"></canvas>

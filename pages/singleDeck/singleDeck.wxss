@@ -1,3 +1,20 @@
+/* page {
+  height: 100%;
+  overflow: hidden;
+} */
+
+/* 卡牌视图 */
+
+.container {
+  background-color: #ddd;
+}
+
+.cardList {
+  padding: 20rpx 0;
+  background-color: #fff;
+  margin-bottom: 10rpx;
+}
+
 .cardList {
   display: flex;
   width: 100%;
@@ -70,7 +87,7 @@
   z-index: 2;
 }
 
-.cardImg{
+.cardImg {
   position: absolute;
   right: 0;
   width: 170rpx;
@@ -87,16 +104,50 @@
   color: #f4d442;
 }
 
+/* 费用曲线 */
+
+.cost {
+  display: flex;
+  justify-content: space-around;
+  margin: 0 auto;
+  width: 60%;
+  height: 300rpx;
+}
+
+.cost .item {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  width: 40rpx;
+  height: 100%;
+}
+
+.cost .col {
+  background-color: #3188b8;
+}
+
+.cost .count, .cost .index {
+  width: 100%;
+  text-align: center;
+}
+
+/* 底部按钮 */
+
 .bottomView {
   position: fixed;
   display: flex;
   bottom: 0;
   width: 100%;
+  z-index: 10;
 }
 
 .bottomView button {
   width: 50%;
   border-radius: 0 !important;
+}
+
+.bottomView button::after {
+  border: none;
 }
 
 .bottomView .iconfont {
