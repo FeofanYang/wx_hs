@@ -4,7 +4,6 @@ Page({
     deckData: null,
     cardsData: null,
     isLoading: true,
-    loadCount: 0,
     gWidth: null,
   },
 
@@ -74,16 +73,7 @@ Page({
     // 绘制 canvas
     this.drawArc('typeCanvas', typeArg);
     this.drawArc('rarityCanvas', rarityArg);
-  },
-
-  // 图片加载
-  cardOnLoad: function(e) {
-    this.setData({
-      loadCount: ++this.data.loadCount
-    });
-    if (this.data.loadCount >= this.data.deckData.cardsAll.length) {
-      wx.hideLoading();
-    }
+    wx.hideLoading();
   },
 
   getCardsObj: function(deck, cards) {
