@@ -3,39 +3,9 @@ Page({
   data: {
     deckData: null,
     cardsData: null,
-    classCardsRes: null,
-    neutralCardsRes: null,
     isLoading: true,
     loadCount: 0,
-    shareData: '小精灵',
     gWidth: null,
-    costData: null
-  },
-
-  onReady: function() {
-    //创建节点选择器
-    var query = wx.createSelectorQuery();
-    //选择id
-    query.select('#cardList').boundingClientRect()
-    query.exec(function(res) {
-      //res就是 所有标签为mjltest的元素的信息 的数组
-      console.log(res);
-      //取高度
-      console.log(res[0].height);
-    })
-  },
-
-  onShareAppMessage: function(res) {
-    let arr = this.data.shareData
-    let shareName;
-    if (arr != []) {
-      shareName = arr[Math.floor(Math.random() * arr.length)];
-    } else {
-      shareName = '小精灵';
-    }
-    return {
-      title: shareName + '向你推荐「' + this.data.deckData.archetype + '」',
-    }
   },
 
   onLoad: function(options) {
@@ -54,19 +24,31 @@ Page({
         cardsData: app.globalData.cards
       });
     }
-  },
-
-  onShow: function() {
+    // 从 find 页面进入
     if (app.globalData.find2singleArg != null) {
       this.setData({
         deckData: app.globalData.find2singleArg
       });
     }
+    // 从转发进入
+    if (options.id != null) {
+      let data = app.globalData.decksData;
+      for (let i = 0; i < data.length; i++) {
+        if (data[i].codeLink == options.id) {
+          this.setData({
+            deckData: data[i]
+          });
+        }
+      }
+    }
+  },
+
+  onShow: function() {
+    let that = this;
     // 修改页面标题
     wx.setNavigationBarTitle({
       title: this.data.deckData.archetype
     })
-    let that = this;
     // 获取设备宽度
     wx.getSystemInfo({
       success: function(res) {
@@ -78,10 +60,38 @@ Page({
     })
     let deck = this.data.deckData,
       cards = this.data.cardsData;
+    // 遍历卡牌，获取对象列表
+    let cardsAllObj = this.getCardsObj(deck, cards);
+    // 遍历卡组，获取分类数组
+    let checkDeckRes = this.checkDeck(cardsAllObj);
+    let typeArg = checkDeckRes.typeArg;
+    let rarityArg = checkDeckRes.rarityArg;
+    // 修改数据
+    this.setData({
+      deckData: that.data.deckData,
+      isLoading: false,
+    });
+    // 绘制 canvas
+    this.drawArc('typeCanvas', typeArg);
+    this.drawArc('rarityCanvas', rarityArg);
+  },
+
+  // 图片加载
+  cardOnLoad: function(e) {
+    this.setData({
+      loadCount: ++this.data.loadCount
+    });
+    if (this.data.loadCount >= this.data.deckData.cardsAll.length) {
+      wx.hideLoading();
+    }
+  },
+
+  getCardsObj: function(deck, cards) {
     let cardsAllObj = [],
       cardsNeutralObj = [],
-      cardsClassObj = [];
-    // 遍历卡牌，获取对象列表
+      cardsClassObj = [],
+      cardsNeutralCount = 0,
+      cardsClassCount = 0;
     for (let x = 0; x < deck.cardsAll.length; x++) {
       for (let y = 0; y < cards.length; y++) {
         if (deck.cardsAll[x].id == cards[y].id) {
@@ -89,6 +99,7 @@ Page({
           cardsAllObj.push(cards[y]);
           if (cards[y].cardClass == 'NEUTRAL') {
             cardsNeutralObj.push(cards[y]);
+            cardsNeutralCount += parseInt(cards[y].copy);
           } else {
             cardsClassObj.push(cards[y]);
           }
@@ -96,6 +107,13 @@ Page({
         }
       }
     }
+    deck.cardsNeutral = cardsNeutralObj;
+    deck.cardsClass = cardsClassObj;
+    deck.cardsNeutralCount = cardsNeutralCount;
+    return cardsAllObj;
+  },
+
+  checkDeck: function(cards) {
     let cMinion = 0,
       cSpell = 0,
       cWeapon = 0,
@@ -115,55 +133,54 @@ Page({
       cost5 = 0,
       cost6 = 0,
       cost7 = 0;
-    // 遍历卡组，获取分类数组
-    for (let i = 0; i < cardsAllObj.length; i++) {
+    for (let i = 0; i < cards.length; i++) {
       // 遍历卡牌类型
-      if (cardsAllObj[i].type == 'MINION') {
-        cMinion += parseInt(cardsAllObj[i].copy);
-        shareArr.push(cardsAllObj[i].name);
+      if (cards[i].type == 'MINION') {
+        cMinion += parseInt(cards[i].copy);
+        shareArr.push(cards[i].name);
       }
-      if (cardsAllObj[i].type == 'SPELL') {
-        cSpell += parseInt(cardsAllObj[i].copy);
+      if (cards[i].type == 'SPELL') {
+        cSpell += parseInt(cards[i].copy);
       }
-      if (cardsAllObj[i].type == 'WEAPON') {
-        cWeapon += parseInt(cardsAllObj[i].copy);
+      if (cards[i].type == 'WEAPON') {
+        cWeapon += parseInt(cards[i].copy);
       }
-      if (cardsAllObj[i].type == 'HERO') {
-        cHero += parseInt(cardsAllObj[i].copy);
+      if (cards[i].type == 'HERO') {
+        cHero += parseInt(cards[i].copy);
       }
       // 遍历稀有度
-      if (cardsAllObj[i].rarity == 'FREE') {
-        cFree += parseInt(cardsAllObj[i].copy);
+      if (cards[i].rarity == 'FREE') {
+        cFree += parseInt(cards[i].copy);
       }
-      if (cardsAllObj[i].rarity == 'COMMON') {
-        cCommon += parseInt(cardsAllObj[i].copy);
+      if (cards[i].rarity == 'COMMON') {
+        cCommon += parseInt(cards[i].copy);
       }
-      if (cardsAllObj[i].rarity == 'RARE') {
-        cRare += parseInt(cardsAllObj[i].copy);
+      if (cards[i].rarity == 'RARE') {
+        cRare += parseInt(cards[i].copy);
       }
-      if (cardsAllObj[i].rarity == 'EPIC') {
-        cEpic += parseInt(cardsAllObj[i].copy);
+      if (cards[i].rarity == 'EPIC') {
+        cEpic += parseInt(cards[i].copy);
       }
-      if (cardsAllObj[i].rarity == 'LEGENDARY') {
-        cLegendary += parseInt(cardsAllObj[i].copy);
+      if (cards[i].rarity == 'LEGENDARY') {
+        cLegendary += parseInt(cards[i].copy);
       }
       // 遍历费用
-      if (cardsAllObj[i].cost == 0) {
-        cost0 += parseInt(cardsAllObj[i].copy);
-      } else if (cardsAllObj[i].cost == 1) {
-        cost1 += parseInt(cardsAllObj[i].copy);
-      } else if (cardsAllObj[i].cost == 2) {
-        cost2 += parseInt(cardsAllObj[i].copy);
-      } else if (cardsAllObj[i].cost == 3) {
-        cost3 += parseInt(cardsAllObj[i].copy);
-      } else if (cardsAllObj[i].cost == 4) {
-        cost4 += parseInt(cardsAllObj[i].copy);
-      } else if (cardsAllObj[i].cost == 5) {
-        cost5 += parseInt(cardsAllObj[i].copy);
-      } else if (cardsAllObj[i].cost == 6) {
-        cost6 += parseInt(cardsAllObj[i].copy);
-      } else if (cardsAllObj[i].cost > 6) {
-        cost7 += parseInt(cardsAllObj[i].copy);
+      if (cards[i].cost == 0) {
+        cost0 += parseInt(cards[i].copy);
+      } else if (cards[i].cost == 1) {
+        cost1 += parseInt(cards[i].copy);
+      } else if (cards[i].cost == 2) {
+        cost2 += parseInt(cards[i].copy);
+      } else if (cards[i].cost == 3) {
+        cost3 += parseInt(cards[i].copy);
+      } else if (cards[i].cost == 4) {
+        cost4 += parseInt(cards[i].copy);
+      } else if (cards[i].cost == 5) {
+        cost5 += parseInt(cards[i].copy);
+      } else if (cards[i].cost == 6) {
+        cost6 += parseInt(cards[i].copy);
+      } else if (cards[i].cost > 6) {
+        cost7 += parseInt(cards[i].copy);
       }
     }
     let typeArg = [{
@@ -228,45 +245,15 @@ Page({
       arr: costArr,
       max: costMax
     };
-    // 修改数据
-    this.setData({
-      classCardsRes: cardsClassObj,
-      neutralCardsRes: cardsNeutralObj,
-      classCardLength: 30 - deck.cardsNeutralCount,
-      neutralCardsLength: deck.cardsNeutralCount,
-      shareData: shareArr,
-      isLoading: false,
-      costData: costData,
-    });
-    this.drawArc('typeCanvas', typeArg);
-    this.drawArc('rarityCanvas', rarityArg);
-  },
-
-  copyCode: function() {
-    // 复制卡组代码
-    wx.setClipboardData({
-      data: this.data.deckData.codeCore,
-      success: function(res) {
-        wx.showToast({
-          title: "代码已复制~",
-          icon: "success"
-        });
-      }
-    })
-  },
-
-  cardOnLoad: function(e) {
-    // 图片加载
-    this.setData({
-      loadCount: ++this.data.loadCount
-    });
-    if (this.data.loadCount >= this.data.deckData.cardsAll.length) {
-      wx.hideLoading();
+    this.data.deckData.cost = costData;
+    this.data.deckData.share = shareArr;
+    return {
+      typeArg: typeArg,
+      rarityArg: rarityArg
     }
   },
 
   drawArc: function(canvasId, typeArg) {
-    // 绘制函数
     let ctx = wx.createCanvasContext(canvasId)
     let width = this.data.gWidth,
       padding = 50,
@@ -311,5 +298,36 @@ Page({
       }
     }
     ctx.draw();
-  }
+  },
+
+  // 复制卡组代码
+  copyCode: function() {
+    wx.setClipboardData({
+      data: this.data.deckData.codeCore,
+      success: function(res) {
+        wx.showToast({
+          title: "代码已复制~",
+          icon: "success"
+        });
+      }
+    })
+  },
+
+  // 分享设置
+  onShareAppMessage: function(res) {
+    // 设置分享标题
+    let arr = this.data.deckData.share
+    let shareName;
+    if (arr != []) {
+      shareName = arr[Math.floor(Math.random() * arr.length)];
+    } else {
+      shareName = '小精灵';
+    }
+    // 传参
+    let arg = this.data.deckData.codeLink;
+    return {
+      title: shareName + '向你推荐「' + this.data.deckData.archetype + '」',
+      path: '/pages/singleDeck/singleDeck?id=' + arg,
+    }
+  },
 })
