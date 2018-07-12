@@ -22,13 +22,19 @@
         </view>
         <text class="cardCopy">{{item.copy}}</text>
       </view>
+      <view class="deckDust">
+        <image src="/images/icon_dust.png"></image>
+        <text>{{deckData.dust}}</text>
+      </view>
     </view>
-  </view>
-  <view class="bottomView">
-    <button bindtap="copyCode">
-      <text class="iconfont icon-fuzhicopy22"></text> 复制卡组</button>
-    <button open-type="share">
-      <text class="iconfont icon-fenxiang"></text> 分享卡组</button>
+    <view class="bottomView">
+      <button bindtap="copyCode">
+        <text class="iconfont icon-fuzhi"></text> 复制
+      </button>
+      <button open-type="share">
+        <text class="iconfont icon-fenxiang"></text> 分享
+      </button>
+    </view>
   </view>
   <view class="section">
     <text class="sectionTitle">费用曲线</text>
@@ -55,4 +61,5 @@
     <text class="sectionTitle">稀有度分布</text>
     <canvas canvas-id="rarityCanvas" style="width:{{gWidth}}px;height: {{gWidth*0.5}}px;"></canvas>
   </view>
+  <view class="toHome" bindtap="toHome"><text class="iconfont icon-home"></text></view>
 </view>

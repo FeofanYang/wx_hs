@@ -320,4 +320,10 @@ Page({
       path: '/pages/singleDeck/singleDeck?id=' + arg,
     }
   },
+
+  toHome: function() {
+    wx.redirectTo({
+      url: '/pages/find/find',
+    })
+  },
 })
