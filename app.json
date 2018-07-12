@@ -1,5 +1,6 @@
 {
   "pages": [
+    "pages/loading/loading",
     "pages/find/find",
     "pages/report/report",
     "pages/index/index",
@@ -8,7 +9,7 @@
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "炉石小程序",
+    "navigationBarTitleText": "炉石卡组",
     "navigationBarTextStyle": "black"
   }
 }

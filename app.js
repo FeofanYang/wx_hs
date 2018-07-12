@@ -3,37 +3,31 @@ App({
     index2findArg: null,
     find2singleArg: null,
     cardsData: null,
-    decksData: [
-      { "codeLink": "EJ6pMPXwOviAA2ekoBkhEh/", "codeCore": "AAECAQcEogTTwwLJxwKf0wINS5EG/weyCPsMm8ICvsMCysMCm8sCzM0Cz+cCquwCm/MCAA==", "archetype": "任务战", "classes": "warrior", "format": "standard", "cardsAll": [{ "id": "UNG_934", "copy": "1" }, { "id": "EX1_410", "copy": "1" }, { "id": "CS2_108", "copy": "2" }, { "id": "LOOT_367", "copy": "2" }, { "id": "GIL_654", "copy": "2" }, { "id": "EX1_391", "copy": "2" }, { "id": "UNG_926", "copy": "2" }, { "id": "GIL_207", "copy": "2" }, { "id": "UNG_072", "copy": "2" }, { "id": "EX1_007", "copy": "2" }, { "id": "UNG_928", "copy": "2" }, { "id": "EX1_606", "copy": "2" }, { "id": "ICC_466", "copy": "2" }, { "id": "ICC_064", "copy": "2" }, { "id": "EX1_407", "copy": "2" }, { "id": "UNG_848", "copy": "1" }, { "id": "ICC_834", "copy": "1" }], "dust": 6080 },
-      { "codeLink": "h13jPxf8XExMgm0JOm9yJ/", "codeCore": "AAECAQcEogSQB9PDAp/TAg1LkQb/B7II+wybwgK+wwLKwwKbywLMzQLP5wKq7AKb8wIA", "archetype": "任务战", "classes": "warrior", "format": "standard", "cardsAll": [{ "id": "UNG_934", "copy": "1" }, { "id": "EX1_410", "copy": "1" }, { "id": "CS2_108", "copy": "2" }, { "id": "LOOT_367", "copy": "2" }, { "id": "GIL_654", "copy": "2" }, { "id": "EX1_391", "copy": "2" }, { "id": "UNG_926", "copy": "2" }, { "id": "GIL_207", "copy": "2" }, { "id": "UNG_072", "copy": "2" }, { "id": "EX1_007", "copy": "2" }, { "id": "UNG_928", "copy": "2" }, { "id": "EX1_606", "copy": "2" }, { "id": "ICC_466", "copy": "2" }, { "id": "ICC_064", "copy": "2" }, { "id": "EX1_407", "copy": "2" }, { "id": "EX1_558", "copy": "1" }, { "id": "ICC_834", "copy": "1" }], "dust": 7280 },
-      { "codeLink": "Yfqifk2PjzibaeYCeiDcBd/", "codeCore": "AAECAQcQFtICrwT8BPIFkAf7DOvCAsrDAsrLAsLOAp/TApziAv3qAs3vAqbwAgccjgWfwgKbywLMzQKd8ALR9QIA", "archetype": "突袭战", "classes": "warrior", "format": "standard", "cardsAll": [{ "id": "EX1_607", "copy": "1" }, { "id": "GIL_580", "copy": "2" }, { "id": "UNG_809", "copy": "1" }, { "id": "EX1_400", "copy": "1" }, { "id": "ICC_851", "copy": "1" }, { "id": "EX1_007", "copy": "1" }, { "id": "UNG_928", "copy": "1" }, { "id": "LOOT_529", "copy": "1" }, { "id": "UNG_075", "copy": "2" }, { "id": "EX1_604", "copy": "2" }, { "id": "GIL_803", "copy": "2" }, { "id": "NEW1_011", "copy": "2" }, { "id": "GIL_584", "copy": "1" }, { "id": "EX1_048", "copy": "1" }, { "id": "ICC_064", "copy": "2" }, { "id": "ICC_466", "copy": "2" }, { "id": "EX1_558", "copy": "1" }, { "id": "ICC_029", "copy": "1" }, { "id": "EX1_116", "copy": "1" }, { "id": "GIL_547", "copy": "1" }, { "id": "ICC_314", "copy": "1" }, { "id": "ICC_834", "copy": "1" }, { "id": "EX1_414", "copy": "1" }], "dust": 13620 },
-      { "codeLink": "XtHtS3XnCq0agxLMwlk0Bd/", "codeCore": "AAECAQcG0gLCzgKf0wL95wLq6gLN9AIMFpEG4QfGwgLMzQL2zwKN0gLx0wLP5QLL5wLq5wKb8wIA", "archetype": "偶数战", "classes": "warrior", "format": "standard", "cardsAll": [{ "id": "EX1_607", "copy": "2" }, { "id": "LOOT_044", "copy": "2" }, { "id": "ICC_281", "copy": "2" }, { "id": "CS2_108", "copy": "2" }, { "id": "GIL_654", "copy": "2" }, { "id": "ICC_837", "copy": "2" }, { "id": "ICC_064", "copy": "2" }, { "id": "GIL_692", "copy": "1" }, { "id": "LOOT_370", "copy": "2" }, { "id": "LOOT_365", "copy": "2" }, { "id": "LOOT_285", "copy": "2" }, { "id": "LOOT_519", "copy": "1" }, { "id": "ICC_834", "copy": "1" }, { "id": "LOOT_380", "copy": "1" }, { "id": "UNG_099", "copy": "2" }, { "id": "ICC_314", "copy": "1" }, { "id": "EX1_414", "copy": "1" }, { "id": "EX1_105", "copy": "2" }], "dust": 13480 },
-      { "codeLink": "kbWLPR3uPKIPNWWO5ZaZvf/", "codeCore": "AAECAQcK0gKiCbnDAobNAo7OAsLOAp/TAubTAv3nAurqAgpLogSRBv8HxsICzM0C9s8C8dMC6ucCm/MCAA==", "archetype": "招募战", "classes": "warrior", "format": "standard", "cardsAll": [{ "id": "UNG_923", "copy": "1" }, { "id": "EX1_410", "copy": "2" }, { "id": "CS2_108", "copy": "2" }, { "id": "ICC_837", "copy": "2" }, { "id": "GIL_654", "copy": "2" }, { "id": "ICC_091", "copy": "1" }, { "id": "ICC_281", "copy": "2" }, { "id": "EX1_606", "copy": "2" }, { "id": "ICC_064", "copy": "2" }, { "id": "EX1_407", "copy": "2" }, { "id": "LOOT_370", "copy": "2" }, { "id": "ICC_834", "copy": "1" }, { "id": "LOOT_380", "copy": "1" }, { "id": "UNG_099", "copy": "2" }, { "id": "EX1_414", "copy": "1" }, { "id": "ICC_405", "copy": "1" }, { "id": "ICC_314", "copy": "1" }, { "id": "LOOT_519", "copy": "1" }, { "id": "EX1_572", "copy": "1" }, { "id": "LOOT_137", "copy": "1" }], "dust": 15320 },
-      { "codeLink": "CeDqoDiJc2nuQob3c1wqrd/", "codeCore": "AAECAQcEqgbTwwLF8wKe+AINS5EDogT8BP8Hm8ICysMCmccCoscCyucCquwC5e8C8vECAA==", "archetype": "奇数任务战", "classes": "warrior", "format": "standard", "cardsAll": [{ "id": "EX1_400", "copy": "2" }, { "id": "UNG_934", "copy": "1" }, { "id": "EX1_410", "copy": "2" }, { "id": "GIL_561", "copy": "2" }, { "id": "LOOT_364", "copy": "2" }, { "id": "CS2_106", "copy": "2" }, { "id": "GIL_207", "copy": "2" }, { "id": "UNG_928", "copy": "2" }, { "id": "UNG_072", "copy": "2" }, { "id": "EX1_606", "copy": "2" }, { "id": "GIL_623", "copy": "2" }, { "id": "EX1_407", "copy": "2" }, { "id": "GIL_667", "copy": "1" }, { "id": "UNG_957", "copy": "2" }, { "id": "EX1_411", "copy": "1" }, { "id": "UNG_838", "copy": "2" }, { "id": "GIL_826", "copy": "1" }], "dust": 7080 },
-      { "codeLink": "G4yTcgTKSPn92h0H3WAm9g/", "codeCore": "AAECAQcM0AKTBN4FqgaQB/kM0cMC08UCoscCz8cCze8CnvgCCUuiAqIE/AT/B5vCAsrnArrsAp3wAgA=", "archetype": "奇数战", "classes": "warrior", "format": "standard", "cardsAll": [{ "id": "GIL_580", "copy": "2" }, { "id": "EX1_400", "copy": "2" }, { "id": "EX1_410", "copy": "2" }, { "id": "LOOT_364", "copy": "2" }, { "id": "CS2_203", "copy": "2" }, { "id": "UNG_946", "copy": "1" }, { "id": "EX1_085", "copy": "1" }, { "id": "UNG_072", "copy": "2" }, { "id": "GIL_113", "copy": "2" }, { "id": "EX1_606", "copy": "2" }, { "id": "EX1_558", "copy": "1" }, { "id": "GIL_547", "copy": "1" }, { "id": "EX1_564", "copy": "1" }, { "id": "EX1_407", "copy": "2" }, { "id": "EX1_005", "copy": "1" }, { "id": "UNG_957", "copy": "1" }, { "id": "UNG_851", "copy": "1" }, { "id": "EX1_249", "copy": "1" }, { "id": "EX1_411", "copy": "1" }, { "id": "UNG_933", "copy": "1" }, { "id": "GIL_826", "copy": "1" }], "dust": 14960 },
-      { "codeLink": "hD41qKmM4EbGKu1ABjZk2b/", "codeCore": "AAECAQcK0gKyCNHDAtPFAobNAo7OAsLOAp/TAvHTAurqAgoWS6IEkQb/B/sMvsMCzM0Cz+cCm/MCAA==", "archetype": "控制战", "classes": "warrior", "format": "standard", "cardsAll": [{ "id": "EX1_607", "copy": "2" }, { "id": "EX1_410", "copy": "2" }, { "id": "ICC_091", "copy": "1" }, { "id": "EX1_391", "copy": "1" }, { "id": "GIL_654", "copy": "2" }, { "id": "ICC_837", "copy": "1" }, { "id": "CS2_108", "copy": "2" }, { "id": "LOOT_367", "copy": "2" }, { "id": "UNG_926", "copy": "2" }, { "id": "EX1_606", "copy": "2" }, { "id": "EX1_007", "copy": "2" }, { "id": "UNG_946", "copy": "1" }, { "id": "ICC_064", "copy": "2" }, { "id": "EX1_407", "copy": "2" }, { "id": "ICC_314", "copy": "1" }, { "id": "ICC_834", "copy": "1" }, { "id": "LOOT_519", "copy": "1" }, { "id": "ICC_405", "copy": "1" }, { "id": "EX1_414", "copy": "1" }, { "id": "UNG_933", "copy": "1" }], "dust": 13040 },
-      { "codeLink": "wsEA4huCdRblzBiNfbreWf/", "codeCore": "AAECAZ8FBK8EpwXxBZ74Ag1G9QX5CpvCAuvCAoPHArjHAuPLApXOAvvTAtHhAtblArXmAgA=", "archetype": "奇数骑", "classes": "paladin", "format": "standard", "cardsAll": [{ "id": "CS2_087", "copy": "2" }, { "id": "EX1_008", "copy": "2" }, { "id": "UNG_960", "copy": "2" }, { "id": "UNG_809", "copy": "2" }, { "id": "ICC_038", "copy": "2" }, { "id": "ICC_092", "copy": "2" }, { "id": "LOOT_286", "copy": "2" }, { "id": "CS2_122", "copy": "2" }, { "id": "UNG_072", "copy": "2" }, { "id": "EX1_349", "copy": "1" }, { "id": "LOOT_167", "copy": "2" }, { "id": "EX1_116", "copy": "1" }, { "id": "LOOT_333", "copy": "2" }, { "id": "CS2_222", "copy": "1" }, { "id": "UNG_950", "copy": "2" }, { "id": "LOOT_149", "copy": "2" }, { "id": "GIL_826", "copy": "1" }], "dust": 5980 }
-    ],
+    decksData: null,
   },
 
-  onLaunch: function () {
-    wx.showLoading({
-      title: '初始化数据中',
-      mask: true
-    })
-    wx.hideTabBar();
+  onLaunch: function() {
     let that = this;
+    // 先请求卡组数据
     wx.request({
-      url: 'https://api.hearthstonejson.com/v1/24769/zhCN/cards.collectible.json',
-      success: function (res) {
-        that.globalData.cardsData = res.data;
-        wx.setStorage({
-          key: "cards",
-          data: res.data
-        })
-        wx.hideLoading();
-        wx.showTabBar();
+      url: 'https://wxapp-1257102469.cos.ap-shanghai.myqcloud.com/decks.json',
+      success: function(res) {
+        that.globalData.decksData = res.data;
+        // 再请求卡牌数据
+        wx.request({
+          url: 'https://wxapp-1257102469.cos.ap-shanghai.myqcloud.com/cards.json',
+          success: function(res) {
+            that.globalData.cardsData = res.data;
+            wx.setStorage({
+              key: "cards",
+              data: res.data
+            });
+            wx.redirectTo({
+              url: '/pages/find/find',
+            });
+          }
+        });
       }
     });
-  }
+  },
 })
