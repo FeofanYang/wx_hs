@@ -72,6 +72,21 @@ page {
 
 .dust text {
   font-size: 34rpx;
-  color: #fff;
-  text-shadow: 1px 1px 2px #000;
+  color: #000;
+}
+
+/* 空白提示 */
+
+.empty {
+  text-align: center;
+}
+
+.empty icon {
+  display: block;
+  margin: 60rpx 0 20rpx;
+}
+
+.empty button{
+  margin-top: 60rpx;
+  width: 90%;
 }

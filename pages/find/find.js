@@ -57,44 +57,7 @@ Page({
     // 设置数据
     this.setData({ decksData: app.globalData.decksData });
     let data = this.data.decksData;
-    let vArr = {
-      all: {
-        all: { decks: [], names: [] },
-        warrior: { decks: [], names: [] },
-        paladin: { decks: [], names: [] },
-        hunter: { decks: [], names: [] },
-        druid: { decks: [], names: [] },
-        rogue: { decks: [], names: [] },
-        shaman: { decks: [], names: [] },
-        mage: { decks: [], names: [] },
-        warlock: { decks: [], names: [] },
-        priest: { decks: [], names: [] },
-      },
-      standard: {
-        all: { decks: [], names: [] },
-        warrior: { decks: [], names: [] },
-        paladin: { decks: [], names: [] },
-        hunter: { decks: [], names: [] },
-        druid: { decks: [], names: [] },
-        rogue: { decks: [], names: [] },
-        shaman: { decks: [], names: [] },
-        mage: { decks: [], names: [] },
-        warlock: { decks: [], names: [] },
-        priest: { decks: [], names: [] },
-      },
-      wild: {
-        all: { decks: [], names: [] },
-        warrior: { decks: [], names: [] },
-        paladin: { decks: [], names: [] },
-        hunter: { decks: [], names: [] },
-        druid: { decks: [], names: [] },
-        rogue: { decks: [], names: [] },
-        shaman: { decks: [], names: [] },
-        mage: { decks: [], names: [] },
-        warlock: { decks: [], names: [] },
-        priest: { decks: [], names: [] },
-      }
-    }
+    let vArr = this.data.dataArr;
     for (let i = 0; i < data.length; i++) {
       // 标准模式
       if (data[i].format == 'standard') {

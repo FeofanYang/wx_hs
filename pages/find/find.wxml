@@ -6,8 +6,9 @@
   </view>
 </picker>
 
-<view wx:if="{{isDeckListNull}}">
-  该筛选条件下暂时没有内容(づ╥﹏╥)づ
+<view class="empty" wx:if="{{isDeckListNull}}">
+  <icon type="info" size="70" />
+  <text>该筛选条件下暂无内容</text>
   <button bindtap="resetPicker">重置筛选</button>
 </view>
 <scroll-view wx:else scroll-y class="deckRl" style="height:{{scrollHeight}}px;" enable-back-to-top="true">
