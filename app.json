@@ -1,9 +1,8 @@
 {
   "pages": [
-    "pages/loading/loading",
+    "pages/index/index",
     "pages/find/find",
     "pages/report/report",
-    "pages/index/index",
     "pages/singleDeck/singleDeck"
   ],
   "window": {
@@ -11,5 +10,22 @@
     "navigationBarBackgroundColor": "#fff",
     "navigationBarTitleText": "炉石卡组",
     "navigationBarTextStyle": "black"
+  },
+  "tabBar": {
+    "selectedColor": "#90bb70",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "主页",
+        "iconPath": "/images/tabbar/icon_index.png",
+        "selectedIconPath": "/images/tabbar/icon_indexA.png"
+      },
+      {
+        "pagePath": "pages/find/find",
+        "text": "卡组查询",
+        "iconPath": "/images/tabbar/icon_search.png",
+        "selectedIconPath": "/images/tabbar/icon_searchA.png"
+      }
+    ]
   }
 }

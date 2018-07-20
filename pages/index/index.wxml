@@ -1,44 +1,26 @@
 <view class='container'>
-  <view class="section header">
-    <swiper class="recommend" autoplay="3000">
-      <block wx:for="{{imgUrls}}">
-        <swiper-item>
-          <image mode="aspectFill" src="{{item.url}}" class="slide-image" />
-          <view class="bottomTitle">{{item.title}}</view>
-        </swiper-item>
-      </block>
-    </swiper>
 
-    <view class="classes">
-      <view wx:for="{{classesInfo}}" class="classBox" data-index="{{index+1}}" bindtap='toFindPage'>
-        <image src="{{item.url}}"></image>
+  <view class='section winrate'>
+    <view class='header'>
+      <text>职业胜率</text>
+      <view class='tabbar'>
+        <view>标准</view>
+        <view>狂野</view>
+        <view>竞技场</view>
+      </view>
+    </view>
+    <view class='preview'></view>
+  </view>
+
+
+  <view class='section'>
+    <view>卡组查询</view>
+    <view class='classes'>
+      <view wx:for='{{classes}}' bindtap='toFindPage' data-index='{{index+1}}' class='classes-item'>
+        <image src='{{item.url}}'></image>
         <text>{{item.name}}</text>
       </view>
     </view>
   </view>
 
-  <view class="section">
-    <view class="mainTitle">炉石新闻</view>
-    <view class="card_news" wx:for="{{newsData}}">
-      <image class="newsImg" src="{{item.image}}"></image>
-      <text class="bottomTitle">{{item.title}}</text>
-    </view>
-  </view>
-
-  <view class="section">
-    <view class="mainTitle">热门卡组</view>
-    <view class="card_deck" wx:for="{{hotdecks}}">
-      <image mode="right" class="leftImg" src="{{item.leftImg}}"></image>
-      <image mode="left" class="rightImg" src="{{item.rightImg}}"></image>
-      <text class="name">{{item.name}}</text>
-      <view class="cost">
-        <image src="/images/icon_dust.png"></image>
-        <text>{{item.cost}}</text>
-      </view>
-    </view>
-  </view>
-
-  <navigator url="/pages/report/report">
-    <button>解析代码</button>
-  </navigator>
 </view>

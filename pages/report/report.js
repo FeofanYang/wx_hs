@@ -2,6 +2,7 @@ const app = getApp();
 Page({
   data: {
     cardsData: null,
+    inputCode: null,
     languageData: [{
         enName: "Aggro Warrior",
         zhName: "快攻战"
@@ -444,7 +445,6 @@ Page({
         zhName: "战士"
       },
     ],
-    inputCode: null,
   },
 
   onLoad: function () {
@@ -459,13 +459,6 @@ Page({
         cardsData: app.globalData.cards
       });
     }
-  },
-
-  bindKeyInput: function(e) {
-    this.setData({
-      inputCode: e.detail.value
-    });
-    console.log(this.data.inputCode);
   },
 
   analyzeCode: function() {
@@ -515,7 +508,6 @@ Page({
       if (codeSplit[i].indexOf("Format:") != -1) {
         json.format = codeSplit[i].split("Format:")[1].replace(/(^\s*)|(\s*$)/g, "").toLowerCase();
       }
-      // console.log("["+i+"]"+codeSplit[i]);
     }
     // 分析卡组列表
     let cardsData = this.data.cardsData;
