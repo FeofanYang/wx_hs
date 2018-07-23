@@ -25,6 +25,7 @@ Page({
       arena: null,
     },
     curWinrateList: null,
+    isWinrate: true
   },
 
   onLoad: function() {
@@ -39,13 +40,15 @@ Page({
         list['standard'] = that.filterCurList(2);
         list['wild'] = that.filterCurList(30);
         list['arena'] = that.filterCurList(3);
-        let day = that.data.winrateRes.as_of;
-        day = day.split('T')[0];
-        that.data.winrateRes.as_of = day;
         that.setData({
           winrateRes: that.data.winrateRes,
           curWinrateList: that.data.winrateList['standard'],
           winrateList: list
+        })
+        let day = that.data.winrateRes.as_of;
+        day = day.split('T')[0];
+        wx.setNavigationBarTitle({
+          title: '每日排行 ' + day,
         })
       },
     })
@@ -105,6 +108,7 @@ Page({
           winrataR[classes][types]['classes'] = name;
           winrataR[classes][types]['classesEN'] = classes.toLowerCase();
           winrataR[classes][types]['win_rate'] = winrataR[classes][types]['win_rate'].toFixed(1);
+          winrataR[classes][types]['popularity'] = winrataR[classes][types]['popularity'].toFixed(1);
           winrataR[classes][types]['index'] = index;
           cur_winrateL.push(winrataR[classes][types]);
         }
@@ -112,6 +116,36 @@ Page({
     }
     cur_winrateL.sort((a, b) => b.win_rate - a.win_rate);
     return cur_winrateL;
+  },
+
+  toggle: function() {
+    this.setData({
+      isWinrate: !this.data.isWinrate
+    })
+    let cur = this.data.curWinrateList[0].game_type;
+    if (cur == 2) {
+      cur = 'standard'
+    }
+    if (cur == 3) {
+      cur = 'arena'
+    }
+    if (cur == 30) {
+      cur = 'wild'
+    }
+    let list = this.data.winrateList;
+    if (this.data.isWinrate) {
+      list['standard'].sort((a, b) => b.win_rate - a.win_rate);
+      list['wild'].sort((a, b) => b.win_rate - a.win_rate);
+      list['arena'].sort((a, b) => b.win_rate - a.win_rate);
+    } else {
+      list['standard'].sort((a, b) => b.popularity - a.popularity);
+      list['wild'].sort((a, b) => b.popularity - a.popularity);
+      list['arena'].sort((a, b) => b.popularity - a.popularity);
+    }
+    this.setData({
+      winrateList: list,
+      curWinrateList: this.data.winrateList[cur],
+    })
   },
 
   toFindPage: function(e) {

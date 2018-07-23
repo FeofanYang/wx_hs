@@ -3,15 +3,14 @@
   <view class='banner'>
     <image mode='aspectFill' src="https://wxapp-1257102469.cos.ap-shanghai.myqcloud.com/images/banner.jpg"></image>
     <view class='mask'></view>
-    <view class='title'>
-      <text> 职业胜率榜 ({{winrateRes.as_of}})</text>
-      <text style='margin-top:20rpx;font-size:60%;'> 每天 09:00-10:00 更新</text>
-    </view>
     <view class='tabbar'>
       <view wx:for='{{winrateStatus}}' bindtap='chooseWinrate' data-choose='{{index}}' class='{{item.status}}'>
         <image src='{{item.BGI}}'></image>
         <text>{{item.name}}</text>
       </view>
+    </view>
+    <view bindtap='toggle' class='toggleBtn'>
+      <text class='iconfont icon-swap'></text> {{isWinrate?'胜率':'热度'}}
     </view>
   </view>
 
@@ -22,7 +21,8 @@
       <view wx:for='{{curWinrateList}}' bindtap='toFindPage' data-index='{{item.index}}' class='preview-item'>
         <image mode='widthFix' src='https://wxapp-1257102469.cos.ap-shanghai.myqcloud.com/images/heros/{{item.classesEN}}.jpg'></image>
         <view class='name'>#{{index+1}} {{item.classes}}</view>
-        <view class='percent'>{{item.win_rate}}%</view>
+        <view wx:if='{{isWinrate}}' class='percent'>{{item.win_rate}}%</view>
+        <view wx:else class='percent'>{{item.popularity}}%</view>
       </view>
     </view>
   </view>
