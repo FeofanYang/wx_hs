@@ -1,24 +1,28 @@
 <view class='container'>
 
-  <view class='section winrate'>
-    <view class='header'>
-      <text>职业胜率</text>
-      <view class='tabbar'>
-        <view>标准</view>
-        <view>狂野</view>
-        <view>竞技场</view>
+  <view class='banner'>
+    <image mode='aspectFill' src="https://wxapp-1257102469.cos.ap-shanghai.myqcloud.com/images/banner.jpg"></image>
+    <view class='mask'></view>
+    <view class='title'>
+      <text> 职业胜率榜 ({{winrateRes.as_of}})</text>
+      <text style='margin-top:20rpx;font-size:60%;'> 每天 09:00-10:00 更新</text>
+    </view>
+    <view class='tabbar'>
+      <view wx:for='{{winrateStatus}}' bindtap='chooseWinrate' data-choose='{{index}}' class='{{item.status}}'>
+        <image src='{{item.BGI}}'></image>
+        <text>{{item.name}}</text>
       </view>
     </view>
-    <view class='preview'></view>
   </view>
 
-
-  <view class='section'>
-    <view>卡组查询</view>
-    <view class='classes'>
-      <view wx:for='{{classes}}' bindtap='toFindPage' data-index='{{index+1}}' class='classes-item'>
-        <image src='{{item.url}}'></image>
-        <text>{{item.name}}</text>
+  <view class='winrate'>
+    <view class='header'>
+    </view>
+    <view class='preview'>
+      <view wx:for='{{curWinrateList}}' bindtap='toFindPage' data-index='{{item.index}}' class='preview-item'>
+        <image mode='widthFix' src='https://wxapp-1257102469.cos.ap-shanghai.myqcloud.com/images/heros/{{item.classesEN}}.jpg'></image>
+        <view class='name'>#{{index+1}} {{item.classes}}</view>
+        <view class='percent'>{{item.win_rate}}%</view>
       </view>
     </view>
   </view>

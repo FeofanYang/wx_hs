@@ -23,13 +23,13 @@ Page({
         cardsData: app.globalData.cards
       });
     }
-    // 从 find 页面进入
+    // 从 find 页面进入 (读取到 find 传参)
     if (app.globalData.find2singleArg != null) {
       this.setData({
         deckData: app.globalData.find2singleArg
       });
     }
-    // 从转发进入
+    // 从转发进入 (读取到分享链接参数)
     if (options.id != null) {
       let data = app.globalData.decksData;
       for (let i = 0; i < data.length; i++) {
@@ -322,8 +322,8 @@ Page({
   },
 
   toHome: function() {
-    wx.redirectTo({
-      url: '/pages/find/find',
+    wx.switchTab({
+      url: '/pages/index/index',
     })
   },
 })

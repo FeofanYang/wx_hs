@@ -1,2 +1,0 @@
-<template name="footer1">这里显示底部1 (づ╥﹏╥)づ {{tempData}}</template>
-<template name="footer2">这里显示底部2 ╰(￣▽￣)╮ {{tempData}}</template>

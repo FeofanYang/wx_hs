@@ -1,40 +1,122 @@
-/* 每日胜率 */
-.winrate .header{
-  padding: 20rpx 40rpx;
+page {
+  height: 100%;
+}
+
+/* 首页 */
+
+.container {
   display: flex;
-  justify-content: space-between;
-  background-color: #1d3657;
+  flex-direction: column;
+  height: 100%;
+}
+
+.banner {
+  position: relative;
+  flex: 1 1 auto;
+  width: 100%;
+  overflow: hidden;
+}
+
+.banner>image {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+.banner .mask {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.banner .title {
+  position: absolute;
+  top: 40%;
+  transform: translate(0, -50%);
+  width: 100%;
+  text-align: center;
+  font-size: 150%;
   color: #fff;
 }
-.winrate .header .tabbar{
+
+.banner .title text {
+  display: block;
+}
+
+.tabbar {
   display: flex;
   flex-direction: row;
-}
-.winrate .header .tabbar view{
-  background-color: rgba(0, 0, 0, 0.5)
+  justify-content: space-between;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  align-items: center;
 }
 
-/* 职业分类 */
-
-.classes {
-  padding-top: 30rpx;
+.tabbar view {
   display: flex;
-  flex-flow: row wrap;
+  justify-content: center;
+  align-items: center;
+  width: 33.3%;
+  height: 90rpx;
+  background-color: #1d3657;
+  color: #fff;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15), 0 3px 6px rgba(0, 0, 0, 0.25);
+  opacity: 0.5;
 }
 
-.classes-item {
-  width: 20%;
-  text-align: center;
-  margin-bottom: 30rpx;
+.tabbar view image {
+  margin-right: 15rpx;
+  height: 35rpx;
+  width: 35rpx;
 }
 
-.classes-item image {
-  width: 100rpx;
-  height: 100rpx;
-  border-radius: 50%;
+.tabbar view.true {
+  opacity: 1;
 }
 
-.classes-item text {
-  display: block;
-  font-size: 20rpx;
+/* 每日胜率 */
+
+.winrate {
+  flex: 0 0 auto;
+}
+
+.preview-item {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  height: 90rpx;
+  line-height: 90rpx;
+  width: 100%;
+  overflow: hidden;
+  background: linear-gradient(90deg, #23272a 0, #23272a 10%, transparent 40%, transparent 60%, #23272a);
+  color: #fff;
+}
+
+.preview-item image {
+  position: absolute;
+  top: -100rpx;
+  width: 100%;
+  z-index: -1;
+}
+
+.preview-item>view {
+  padding: 0 20rpx;
+  font-weight: bold;
+}
+
+.name {
+  font-size: 130%;
+}
+
+.preview-item .percent {
+  text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.5),
+                 -1px 1px 0 rgba(0, 0, 0, 0.5),
+                 1px 1px 0 rgba(0, 0, 0, 0.5),
+                 1px -1px 0 rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.25);
 }

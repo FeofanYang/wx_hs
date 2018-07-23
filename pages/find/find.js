@@ -4,58 +4,164 @@ Page({
     decksData: null,
     isDeckListNull: false,
     scrollHeight: null,
-    multiArray: [['全部模式', '标准模式', '狂野模式'], ['全部职业', '战士', '圣骑士', '猎人', '德鲁伊', '潜行者', '萨满祭司', '法师', '术士', '牧师'], ['全部原型']],
+    multiArray: [
+      ['全部模式', '标准模式', '狂野模式'],
+      ['全部职业', '战士', '圣骑士', '猎人', '德鲁伊', '潜行者', '萨满祭司', '法师', '术士', '牧师'],
+      ['全部原型']
+    ],
     multiIndex: [0, 0, 0],
     dataArr: {
       all: {
-        all: { decks: [], names: [] },
-        warrior: { decks: [], names: [] },
-        paladin: { decks: [], names: [] },
-        hunter: { decks: [], names: [] },
-        druid: { decks: [], names: [] },
-        rogue: { decks: [], names: [] },
-        shaman: { decks: [], names: [] },
-        mage: { decks: [], names: [] },
-        warlock: { decks: [], names: [] },
-        priest: { decks: [], names: [] },
+        all: {
+          decks: [],
+          names: []
+        },
+        warrior: {
+          decks: [],
+          names: []
+        },
+        paladin: {
+          decks: [],
+          names: []
+        },
+        hunter: {
+          decks: [],
+          names: []
+        },
+        druid: {
+          decks: [],
+          names: []
+        },
+        rogue: {
+          decks: [],
+          names: []
+        },
+        shaman: {
+          decks: [],
+          names: []
+        },
+        mage: {
+          decks: [],
+          names: []
+        },
+        warlock: {
+          decks: [],
+          names: []
+        },
+        priest: {
+          decks: [],
+          names: []
+        },
       },
-      standard:{
-        all: { decks: [], names: [] },
-        warrior: { decks: [], names: [] },
-        paladin: { decks: [], names: [] },
-        hunter: { decks: [], names: [] },
-        druid: { decks: [], names: [] },
-        rogue: { decks: [], names: [] },
-        shaman: { decks: [], names: [] },
-        mage: { decks: [], names: [] },
-        warlock: { decks: [], names: [] },
-        priest: { decks: [], names: [] },
+      standard: {
+        all: {
+          decks: [],
+          names: []
+        },
+        warrior: {
+          decks: [],
+          names: []
+        },
+        paladin: {
+          decks: [],
+          names: []
+        },
+        hunter: {
+          decks: [],
+          names: []
+        },
+        druid: {
+          decks: [],
+          names: []
+        },
+        rogue: {
+          decks: [],
+          names: []
+        },
+        shaman: {
+          decks: [],
+          names: []
+        },
+        mage: {
+          decks: [],
+          names: []
+        },
+        warlock: {
+          decks: [],
+          names: []
+        },
+        priest: {
+          decks: [],
+          names: []
+        },
       },
       wild: {
-        all: { decks: [], names: [] },
-        warrior: { decks: [], names: [] },
-        paladin: { decks: [], names: [] },
-        hunter: { decks: [], names: [] },
-        druid: { decks: [], names: [] },
-        rogue: { decks: [], names: [] },
-        shaman: { decks: [], names: [] },
-        mage: { decks: [], names: [] },
-        warlock: { decks: [], names: [] },
-        priest: { decks: [], names: [] },
+        all: {
+          decks: [],
+          names: []
+        },
+        warrior: {
+          decks: [],
+          names: []
+        },
+        paladin: {
+          decks: [],
+          names: []
+        },
+        hunter: {
+          decks: [],
+          names: []
+        },
+        druid: {
+          decks: [],
+          names: []
+        },
+        rogue: {
+          decks: [],
+          names: []
+        },
+        shaman: {
+          decks: [],
+          names: []
+        },
+        mage: {
+          decks: [],
+          names: []
+        },
+        warlock: {
+          decks: [],
+          names: []
+        },
+        priest: {
+          decks: [],
+          names: []
+        },
       }
     },
   },
 
-  onLoad: function () {
+  onLoad: function() {
     // 获取页面高度
     let that = this;
     wx.getSystemInfo({
-      success: function (res) {
-        that.setData({ scrollHeight: res.windowHeight - 50 });
+      success: function(res) {
+        that.setData({
+          scrollHeight: res.windowHeight - 50
+        });
       }
     });
     // 设置数据
-    this.setData({ decksData: app.globalData.decksData });
+    // 如果可以优先从缓存中读取，否则读取全局变量
+    const decks = wx.getStorageSync('decks');
+    if (decks) {
+      this.setData({
+        decksData: decks
+      });
+    } else {
+      this.setData({
+        decksData: app.globalData.decksData
+      });
+    }
     let data = this.data.decksData;
     let vArr = this.data.dataArr;
     for (let i = 0; i < data.length; i++) {
@@ -72,7 +178,7 @@ Page({
       }
       // 狂野模式
       if (data[i].format == 'wild') {
-        for (let w in vArr.wild){
+        for (let w in vArr.wild) {
           if (data[i].classes == w) {
             vArr.wild[w].decks.push(data[i]);
             vArr.wild[w].names.push(data[i].archetype);
@@ -107,7 +213,7 @@ Page({
       vArr.all[uniItem].names.unshift("全部原型");
     }
     // 修改 page-data
-    for (let classes in this.data.dataArr.standard){
+    for (let classes in this.data.dataArr.standard) {
       this.setData({
         ['dataArr.standard.' + classes + '.decks']: vArr.standard[classes].decks,
         ['dataArr.standard.' + classes + '.names']: vArr.standard[classes].names,
@@ -121,24 +227,29 @@ Page({
     console.log(this.data.dataArr);
   },
 
-  onShow: function () {
+  onShow: function() {
     // 页面路由
     if (app.globalData.index2findArg != null) {
       this.filterList(0, app.globalData.index2findArg, 0);
-      this.setData({ multiIndex: [0, app.globalData.index2findArg, 0] });
+      this.setData({
+        multiIndex: [0, app.globalData.index2findArg, 0]
+      });
       app.globalData.index2findArg = null;
     }
   },
 
-  bindMultiPickerChange: function (e) {
-    this.setData({ multiIndex: e.detail.value, isDeckListNull: false });
+  bindMultiPickerChange: function(e) {
+    this.setData({
+      multiIndex: e.detail.value,
+      isDeckListNull: false
+    });
     let col1Val = e.detail.value[0];
     let col2Val = e.detail.value[1];
     let col3Val = e.detail.value[2];
     this.filterList(col1Val, col2Val, col3Val);
   },
 
-  bindMultiPickerColumnChange: function (e) {
+  bindMultiPickerColumnChange: function(e) {
     // console.log('修改的列为', e.detail.column, '，值为', e.detail.value);
     let dataArr = this.data.dataArr;
     let data = {
@@ -166,7 +277,7 @@ Page({
         data.multiIndex[1] = 0;
         data.multiIndex[2] = 0;
         break;
-      // 二级列表
+        // 二级列表
       case 1:
         switch (data.multiIndex[0]) {
           // 全部
@@ -204,7 +315,7 @@ Page({
                 break;
             }
             break;
-          // 标准模式
+            // 标准模式
           case 1:
             switch (data.multiIndex[1]) {
               case 0:
@@ -239,7 +350,7 @@ Page({
                 break;
             }
             break;
-          // 狂野模式
+            // 狂野模式
           case 2:
             switch (data.multiIndex[1]) {
               case 0:
@@ -281,8 +392,10 @@ Page({
     this.setData(data);
   },
 
-  filterList: function (col1Val, col2Val, col3Val){
-    this.setData({ isDeckListNull: false })
+  filterList: function(col1Val, col2Val, col3Val) {
+    this.setData({
+      isDeckListNull: false
+    })
     let col1Key = Object.keys(this.data.dataArr);
     let col2Key = Object.keys(this.data.dataArr[col1Key[col1Val]]);
     let col3Key = this.data.dataArr[col1Key[col1Val]][col2Key[col2Val]].names;
@@ -294,8 +407,14 @@ Page({
     if (col3 == "全部原型") {
       // 如果选择全部原型，直接将全部原型展示
       // 没有可显示的内容
-      if (choose.length == 0) { this.setData({ isDeckListNull: true }) }
-      this.setData({ decksData: choose });
+      if (choose.length == 0) {
+        this.setData({
+          isDeckListNull: true
+        })
+      }
+      this.setData({
+        decksData: choose
+      });
     } else {
       // 否则先对应keys筛选，再展示筛选后的列表
       for (let deck in choose) {
@@ -309,15 +428,19 @@ Page({
     }
   },
 
-  resetPicker: function (){
-    this.filterList(0,0,0);
-    this.setData({ multiIndex: [0,0,0] });
+  resetPicker: function() {
+    this.filterList(0, 0, 0);
+    this.setData({
+      multiIndex: [0, 0, 0]
+    });
   },
 
-  toSinglePage: function (e) {
+  toSinglePage: function(e) {
     let index = e.currentTarget.dataset.index;
     let data = this.data.decksData[index];
     app.globalData.find2singleArg = data;
-    wx.navigateTo({url: '../singleDeck/singleDeck' });
+    wx.navigateTo({
+      url: '../singleDeck/singleDeck'
+    });
   },
 })
