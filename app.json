@@ -2,7 +2,6 @@
   "pages": [
     "pages/index/index",
     "pages/find/find",
-    "pages/report/report",
     "pages/singleDeck/singleDeck"
   ],
   "window": {

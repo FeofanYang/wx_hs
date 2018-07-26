@@ -1,429 +1,425 @@
 const app = getApp();
 Page({
   data: {
-    decksData: null,
-    isDeckListNull: false,
-    scrollHeight: null,
-    multiArray: [
-      ['全部模式', '标准模式', '狂野模式'],
+    ResDecksList: null,
+    ResArchetypes: null,
+    oSList: {
+      all: {
+        decks: [],
+        names: []
+      },
+      warrior: {
+        decks: [],
+        names: []
+      },
+      paladin: {
+        decks: [],
+        names: []
+      },
+      hunter: {
+        decks: [],
+        names: []
+      },
+      druid: {
+        decks: [],
+        names: []
+      },
+      rogue: {
+        decks: [],
+        names: []
+      },
+      shaman: {
+        decks: [],
+        names: []
+      },
+      mage: {
+        decks: [],
+        names: []
+      },
+      warlock: {
+        decks: [],
+        names: []
+      },
+      priest: {
+        decks: [],
+        names: []
+      },
+    },
+    oWList: {
+      all: {
+        decks: [],
+        names: []
+      },
+      warrior: {
+        decks: [],
+        names: []
+      },
+      paladin: {
+        decks: [],
+        names: []
+      },
+      hunter: {
+        decks: [],
+        names: []
+      },
+      druid: {
+        decks: [],
+        names: []
+      },
+      rogue: {
+        decks: [],
+        names: []
+      },
+      shaman: {
+        decks: [],
+        names: []
+      },
+      mage: {
+        decks: [],
+        names: []
+      },
+      warlock: {
+        decks: [],
+        names: []
+      },
+      priest: {
+        decks: [],
+        names: []
+      },
+    },
+    oPages: {
+      allList: null,
+      curList: null,
+      allIndex: null,
+      curIndex: 1,
+    },
+    bSortByGames: true,
+    aMultiList: [
+      ['标准模式', '狂野模式'],
       ['全部职业', '战士', '圣骑士', '猎人', '德鲁伊', '潜行者', '萨满祭司', '法师', '术士', '牧师'],
       ['全部原型']
     ],
-    multiIndex: [0, 0, 0],
-    dataArr: {
-      all: {
-        all: {
-          decks: [],
-          names: []
-        },
-        warrior: {
-          decks: [],
-          names: []
-        },
-        paladin: {
-          decks: [],
-          names: []
-        },
-        hunter: {
-          decks: [],
-          names: []
-        },
-        druid: {
-          decks: [],
-          names: []
-        },
-        rogue: {
-          decks: [],
-          names: []
-        },
-        shaman: {
-          decks: [],
-          names: []
-        },
-        mage: {
-          decks: [],
-          names: []
-        },
-        warlock: {
-          decks: [],
-          names: []
-        },
-        priest: {
-          decks: [],
-          names: []
-        },
-      },
-      standard: {
-        all: {
-          decks: [],
-          names: []
-        },
-        warrior: {
-          decks: [],
-          names: []
-        },
-        paladin: {
-          decks: [],
-          names: []
-        },
-        hunter: {
-          decks: [],
-          names: []
-        },
-        druid: {
-          decks: [],
-          names: []
-        },
-        rogue: {
-          decks: [],
-          names: []
-        },
-        shaman: {
-          decks: [],
-          names: []
-        },
-        mage: {
-          decks: [],
-          names: []
-        },
-        warlock: {
-          decks: [],
-          names: []
-        },
-        priest: {
-          decks: [],
-          names: []
-        },
-      },
-      wild: {
-        all: {
-          decks: [],
-          names: []
-        },
-        warrior: {
-          decks: [],
-          names: []
-        },
-        paladin: {
-          decks: [],
-          names: []
-        },
-        hunter: {
-          decks: [],
-          names: []
-        },
-        druid: {
-          decks: [],
-          names: []
-        },
-        rogue: {
-          decks: [],
-          names: []
-        },
-        shaman: {
-          decks: [],
-          names: []
-        },
-        mage: {
-          decks: [],
-          names: []
-        },
-        warlock: {
-          decks: [],
-          names: []
-        },
-        priest: {
-          decks: [],
-          names: []
-        },
-      }
-    },
+    aMultiIndex: [0, 0, 0],
+    aFilterList: null,
+    bEmptyList: false,
+    nScrollH: null,
   },
 
   onLoad: function() {
-    // 获取页面高度
     let that = this;
+    // 获取页面高度
     wx.getSystemInfo({
       success: function(res) {
         that.setData({
-          scrollHeight: res.windowHeight - 50
+          nScrollH: res.windowHeight - 60 - 80
         });
       }
     });
-    // 设置数据
     // 如果可以优先从缓存中读取，否则读取全局变量
-    const decks = wx.getStorageSync('decks');
-    if (decks) {
-      this.setData({
-        decksData: decks
+    let _decks = wx.getStorageSync('decks');
+    let _types = wx.getStorageSync('types');
+    if (_decks && _types) {
+      console.log('---从缓存中读取---');
+      wx.showLoading({
+        mask: true,
+        title: '加载数据中…',
       });
+      this.setData({
+        ResDecksList: _decks,
+        ResArchetypes: _types
+      });
+      this.setList();
+      wx.hideLoading();
     } else {
-      this.setData({
-        decksData: app.globalData.decksData
+      console.log('---从请求 or 全局变量中读取---');
+      wx.showLoading({
+        mask: true,
+        title: '请求数据中…',
+      });
+      wx.request({
+        url: 'https://wxapp-1257102469.cos.ap-shanghai.myqcloud.com/archetypes.json',
+        success: function(res) {
+          that.setData({
+            ResDecksList: app.globalData.decksData,
+            ResArchetypes: res.data
+          });
+          wx.setStorage({
+            key: "types",
+            data: that.data.ResArchetypes
+          });
+          that.setList();
+          wx.hideLoading();
+        }
       });
     }
-    let data = this.data.decksData;
-    let vArr = this.data.dataArr;
-    for (let i = 0; i < data.length; i++) {
-      // 标准模式
-      if (data[i].format == 'standard') {
-        for (let s in vArr.standard) {
-          if (data[i].classes == s) {
-            vArr.standard[s].decks.push(data[i]);
-            vArr.standard[s].names.push(data[i].archetype);
-          }
-        }
-        vArr.standard.all.decks.push(data[i]);
-        vArr.standard.all.names.push(data[i].archetype);
-      }
-      // 狂野模式
-      if (data[i].format == 'wild') {
-        for (let w in vArr.wild) {
-          if (data[i].classes == w) {
-            vArr.wild[w].decks.push(data[i]);
-            vArr.wild[w].names.push(data[i].archetype);
-          }
-        }
-        vArr.wild.all.decks.push(data[i]);
-        vArr.wild.all.names.push(data[i].archetype);
-      }
-      // 全部模式
-      for (let a in vArr.all) {
-        if (data[i].classes == a) {
-          vArr.all[a].decks.push(data[i]);
-          vArr.all[a].names.push(data[i].archetype);
-        }
-      }
-      vArr.all.all.decks.push(data[i]);
-      vArr.all.all.names.push(data[i].archetype);
-    }
-    // 循环结束
-    // 数组去重
-    const unique = arr => [...new Set(arr)];
-    for (let uniItem in vArr.standard) {
-      vArr.standard[uniItem].names = unique(vArr.standard[uniItem].names);
-      vArr.standard[uniItem].names.unshift("全部原型");
-    }
-    for (let uniItem in vArr.wild) {
-      vArr.wild[uniItem].names = unique(vArr.wild[uniItem].names);
-      vArr.wild[uniItem].names.unshift("全部原型");
-    }
-    for (let uniItem in vArr.all) {
-      vArr.all[uniItem].names = unique(vArr.all[uniItem].names);
-      vArr.all[uniItem].names.unshift("全部原型");
-    }
-    // 修改 page-data
-    for (let classes in this.data.dataArr.standard) {
-      this.setData({
-        ['dataArr.standard.' + classes + '.decks']: vArr.standard[classes].decks,
-        ['dataArr.standard.' + classes + '.names']: vArr.standard[classes].names,
-        ['dataArr.wild.' + classes + '.decks']: vArr.wild[classes].decks,
-        ['dataArr.wild.' + classes + '.names']: vArr.wild[classes].names,
-        ['dataArr.all.' + classes + '.decks']: vArr.all[classes].decks,
-        ['dataArr.all.' + classes + '.names']: vArr.all[classes].names,
-        ['multiArray[2]']: vArr.all.all.names,
-      })
-    }
-    console.log(this.data.dataArr);
   },
 
   onShow: function() {
     // 页面路由
-    if (app.globalData.index2findArg != null) {
-      this.filterList(0, app.globalData.index2findArg, 0);
+    let arg = app.globalData.index2findArg;
+    if (arg != null) {
+      this.filterList(0, arg.index, 0);
       this.setData({
-        multiIndex: [0, app.globalData.index2findArg, 0]
+        aMultiIndex: [0, arg.index, 0]
       });
-      app.globalData.index2findArg = null;
+      this.pagination(this.data.oSList[arg.classes].decks, this.data.oPages.curIndex, true);
+      arg = null;
     }
+  },
+
+  setList: function() {
+    let decks = this.data.ResDecksList;
+    let types = this.data.ResArchetypes;
+    let oSList = this.data.oSList;
+    for (let c in decks) {
+      for (let d in decks[c]) {
+        delete decks[c][d]['avg_game_length_seconds'];
+        delete decks[c][d]['avg_num_player_turns'];
+        delete decks[c][d]['digest'];
+        // 设置 classes 属性
+        decks[c][d]['classes'] = c.toLowerCase();
+        let classes = decks[c][d]['classes'];
+        // 调整 win_rate 值
+        decks[c][d]['win_rate'] = decks[c][d]['win_rate'].toFixed(1);
+        // 对局数量后两位取整
+        decks[c][d]['total_games'] = Math.round(decks[c][d]['total_games'] / 100) * 100;
+        // 添加中文卡组名
+        for (let t in types) {
+          if (decks[c][d]['archetype_id'] == t) {
+            decks[c][d]['archetype'] = types[t]
+          }
+        }
+        // 分职业添加对象
+        oSList[classes].decks.push(decks[c][d]);
+        oSList[classes].names.push(decks[c][d].archetype);
+        // 全部添加对象
+        oSList.all.decks.push(decks[c][d]);
+        oSList.all.names.push(decks[c][d].archetype);
+      }
+    }
+    // 卡组名去重
+    const unique = arr => [...new Set(arr)];
+    for (let item in oSList) {
+      oSList[item].names = unique(oSList[item].names);
+      oSList[item].names.unshift("全部原型");
+      this.setData({
+        ['oSList.' + item + '.decks']: oSList[item].decks,
+        ['oSList.' + item + '.names']: oSList[item].names,
+      });
+    }
+    this.setData({
+      ['aMultiList[2]']: oSList.all.names,
+    });
+    this.pagination(oSList.all.decks, this.data.oPages.curIndex, this.data.bSortByGames);
+  },
+
+  pagination: function(_shortList, _resetIndex, _sortByGames) {
+    wx.showLoading({
+      mask: true,
+      title: '加载列表中…',
+    })
+    this.setData({
+      ['oPages.curIndex']: _resetIndex
+    })
+    if (_sortByGames) {
+      _shortList.sort((a, b) => b.total_games - a.total_games);
+    } else {
+      _shortList.sort((a, b) => b.win_rate - a.win_rate);
+    }
+    let items = 50;
+    let allIndex = Math.ceil(_shortList.length / items);
+    let curIndex = this.data.oPages.curIndex;
+    // 设置分页
+    let curList = [];
+    for (let i = 0; i < _shortList.length; i++) {
+      if (i >= items * (curIndex - 1) && i < items * curIndex) {
+        curList.push(_shortList[i]);
+        if (curList >= items) {
+          break;
+        }
+      }
+    }
+    this.setData({
+      ['oPages.allList']: _shortList,
+      ['oPages.curList']: curList,
+      ['oPages.allIndex']: allIndex,
+    });
+    wx.hideLoading();
+  },
+  bindPageNext: function() {
+    this.pagination(this.data.oPages.allList, ++this.data.oPages.curIndex, this.data.bSortByGames);
+  },
+  bindPagePrev: function() {
+    this.pagination(this.data.oPages.allList, --this.data.oPages.curIndex, this.data.bSortByGames);
+  },
+
+  sortBtn: function(e) {
+    let res = e.currentTarget.dataset.filter;
+    if ((this.data.bSortByGames && res == 'total_games') || (!this.data.bSortByGames && res == 'win_rate')) {
+      return false;
+    }
+    let _is;
+    res == 'total_games' ? _is = true : _is = false;
+    this.setData({
+      bSortByGames: _is
+    })
+    this.pagination(this.data.oPages.allList, this.data.oPages.curIndex, this.data.bSortByGames)
   },
 
   bindMultiPickerChange: function(e) {
     this.setData({
-      multiIndex: e.detail.value,
-      isDeckListNull: false
+      aMultiIndex: e.detail.value,
+      bEmptyList: false
     });
     let col1Val = e.detail.value[0];
     let col2Val = e.detail.value[1];
     let col3Val = e.detail.value[2];
     this.filterList(col1Val, col2Val, col3Val);
+    this.pagination(this.data.aFilterList, 1, this.data.bSortByGames);
   },
-
   bindMultiPickerColumnChange: function(e) {
-    // console.log('修改的列为', e.detail.column, '，值为', e.detail.value);
-    let dataArr = this.data.dataArr;
+    let oSList = this.data.oSList;
+    let oWList = this.data.oWList;
     let data = {
-      multiArray: this.data.multiArray,
-      multiIndex: this.data.multiIndex
+      aMultiList: this.data.aMultiList,
+      aMultiIndex: this.data.aMultiIndex
     };
-    data.multiIndex[e.detail.column] = e.detail.value;
+    data.aMultiIndex[e.detail.column] = e.detail.value;
     switch (e.detail.column) {
       // 一级列表
       case 0:
-        switch (data.multiIndex[0]) {
+        switch (data.aMultiIndex[0]) {
           case 0:
-            data.multiArray[1] = this.data.multiArray[1];
-            data.multiArray[2] = dataArr.all.all.names;
+            data.aMultiList[1] = this.data.aMultiList[1];
+            data.aMultiList[2] = oSList.all.names;
             break;
           case 1:
-            data.multiArray[1] = this.data.multiArray[1];
-            data.multiArray[2] = dataArr.standard.all.names;
-            break;
-          case 2:
-            data.multiArray[1] = this.data.multiArray[1];
-            data.multiArray[2] = dataArr.wild.all.names;
+            data.aMultiList[1] = this.data.aMultiList[1];
+            data.aMultiList[2] = oWList.all.names;
             break;
         }
-        data.multiIndex[1] = 0;
-        data.multiIndex[2] = 0;
+        data.aMultiIndex[1] = 0;
+        data.aMultiIndex[2] = 0;
         break;
         // 二级列表
       case 1:
-        switch (data.multiIndex[0]) {
-          // 全部
+        switch (data.aMultiIndex[0]) {
+          // 标准模式
           case 0:
-            switch (data.multiIndex[1]) {
+            switch (data.aMultiIndex[1]) {
               case 0:
-                data.multiArray[2] = dataArr.all.all.names;
+                data.aMultiList[2] = oSList.all.names;
                 break;
               case 1:
-                data.multiArray[2] = dataArr.all.warrior.names;
+                data.aMultiList[2] = oSList.warrior.names;
                 break;
               case 2:
-                data.multiArray[2] = dataArr.all.paladin.names;
+                data.aMultiList[2] = oSList.paladin.names;
                 break;
               case 3:
-                data.multiArray[2] = dataArr.all.hunter.names;
+                data.aMultiList[2] = oSList.hunter.names;
                 break;
               case 4:
-                data.multiArray[2] = dataArr.all.druid.names;
+                data.aMultiList[2] = oSList.druid.names;
                 break;
               case 5:
-                data.multiArray[2] = dataArr.all.rogue.names;
+                data.aMultiList[2] = oSList.rogue.names;
                 break;
               case 6:
-                data.multiArray[2] = dataArr.all.shaman.names;
+                data.aMultiList[2] = oSList.shaman.names;
                 break;
               case 7:
-                data.multiArray[2] = dataArr.all.mage.names;
+                data.aMultiList[2] = oSList.mage.names;
                 break;
               case 8:
-                data.multiArray[2] = dataArr.all.warlock.names;
+                data.aMultiList[2] = oSList.warlock.names;
                 break;
               case 9:
-                data.multiArray[2] = dataArr.all.priest.names;
-                break;
-            }
-            break;
-            // 标准模式
-          case 1:
-            switch (data.multiIndex[1]) {
-              case 0:
-                data.multiArray[2] = dataArr.standard.all.names;
-                break;
-              case 1:
-                data.multiArray[2] = dataArr.standard.warrior.names;
-                break;
-              case 2:
-                data.multiArray[2] = dataArr.standard.paladin.names;
-                break;
-              case 3:
-                data.multiArray[2] = dataArr.standard.hunter.names;
-                break;
-              case 4:
-                data.multiArray[2] = dataArr.standard.druid.names;
-                break;
-              case 5:
-                data.multiArray[2] = dataArr.standard.rogue.names;
-                break;
-              case 6:
-                data.multiArray[2] = dataArr.standard.shaman.names;
-                break;
-              case 7:
-                data.multiArray[2] = dataArr.standard.mage.names;
-                break;
-              case 8:
-                data.multiArray[2] = dataArr.standard.warlock.names;
-                break;
-              case 9:
-                data.multiArray[2] = dataArr.standard.priest.names;
+                data.aMultiList[2] = oSList.priest.names;
                 break;
             }
             break;
             // 狂野模式
-          case 2:
-            switch (data.multiIndex[1]) {
+          case 1:
+            switch (data.aMultiIndex[1]) {
               case 0:
-                data.multiArray[2] = dataArr.wild.all.names;
+                data.aMultiList[2] = oWList.all.names;
                 break;
               case 1:
-                data.multiArray[2] = dataArr.wild.warrior.names;
+                data.aMultiList[2] = oWList.warrior.names;
                 break;
               case 2:
-                data.multiArray[2] = dataArr.wild.paladin.names;
+                data.aMultiList[2] = oWList.paladin.names;
                 break;
               case 3:
-                data.multiArray[2] = dataArr.wild.hunter.names;
+                data.aMultiList[2] = oWList.hunter.names;
                 break;
               case 4:
-                data.multiArray[2] = dataArr.wild.druid.names;
+                data.aMultiList[2] = oWList.druid.names;
                 break;
               case 5:
-                data.multiArray[2] = dataArr.wild.rogue.names;
+                data.aMultiList[2] = oWList.rogue.names;
                 break;
               case 6:
-                data.multiArray[2] = dataArr.wild.shaman.names;
+                data.aMultiList[2] = oWList.shaman.names;
                 break;
               case 7:
-                data.multiArray[2] = dataArr.wild.mage.names;
+                data.aMultiList[2] = oWList.mage.names;
                 break;
               case 8:
-                data.multiArray[2] = dataArr.wild.warlock.names;
+                data.aMultiList[2] = oWList.warlock.names;
                 break;
               case 9:
-                data.multiArray[2] = dataArr.wild.priest.names;
+                data.aMultiList[2] = oWList.priest.names;
                 break;
             }
             break;
         }
-        data.multiIndex[2] = 0;
+        data.aMultiIndex[2] = 0;
         break;
     }
     this.setData(data);
   },
-
   filterList: function(col1Val, col2Val, col3Val) {
     this.setData({
-      isDeckListNull: false
+      bEmptyList: false
     })
-    let col1Key = Object.keys(this.data.dataArr);
-    let col2Key = Object.keys(this.data.dataArr[col1Key[col1Val]]);
-    let col3Key = this.data.dataArr[col1Key[col1Val]][col2Key[col2Val]].names;
-    let col1 = col1Key[col1Val];
+    // 判断是标准还是狂野，赋值的对象
+    let col1Obj;
+    if (col1Val == 0) {
+      col1Obj = this.data.oSList;
+    } else if (col1Val == 1) {
+      col1Obj = this.data.oWList;
+    }
+    // 获取对应的键值
+    let col2Key = Object.keys(col1Obj);
+    let col3Key = this.data.oSList[col2Key[col2Val]].names;
     let col2 = col2Key[col2Val];
     let col3 = col3Key[col3Val];
-    let choose = this.data.dataArr[col1][col2].decks;
-    let curList = [];
+    let choose = col1Obj[col2].decks;
+    let list = [];
     if (col3 == "全部原型") {
       // 如果选择全部原型，直接将全部原型展示
       // 没有可显示的内容
       if (choose.length == 0) {
         this.setData({
-          isDeckListNull: true
+          bEmptyList: true
         })
       }
+      choose.sort((a, b) => b.total_games - a.total_games);
       this.setData({
-        decksData: choose
+        aFilterList: choose
       });
     } else {
       // 否则先对应keys筛选，再展示筛选后的列表
       for (let deck in choose) {
         if (choose[deck].archetype == col3) {
-          curList.push(choose[deck]);
+          list.push(choose[deck]);
         }
       }
+      list.sort((a, b) => b.total_games - a.total_games);
       this.setData({
-        decksData: curList
+        aFilterList: list
       });
     }
   },
@@ -431,13 +427,14 @@ Page({
   resetPicker: function() {
     this.filterList(0, 0, 0);
     this.setData({
-      multiIndex: [0, 0, 0]
+      aMultiIndex: [0, 0, 0]
     });
+    this.pagination(this.data.oSList.all.decks, 1, true);
   },
 
   toSinglePage: function(e) {
     let index = e.currentTarget.dataset.index;
-    let data = this.data.decksData[index];
+    let data = this.data.oPages.curList[index];
     app.globalData.find2singleArg = data;
     wx.navigateTo({
       url: '../singleDeck/singleDeck'

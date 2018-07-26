@@ -1,26 +1,38 @@
-<picker mode="multiSelector" bindchange="bindMultiPickerChange" bindcolumnchange="bindMultiPickerColumnChange" value="{{multiIndex}}" range="{{multiArray}}">
-  <view class="picker">
-    <view>{{multiArray[0][multiIndex[0]]}} ▾</view>
-    <view>{{multiArray[1][multiIndex[1]]}} ▾</view>
-    <view>{{multiArray[2][multiIndex[2]]}} ▾</view>
-  </view>
-</picker>
-
-<view class="empty" wx:if="{{isDeckListNull}}">
-  <icon type="info" size="70" />
-  <text>该筛选条件下暂无内容</text>
-  <button bindtap="resetPicker">重置筛选</button>
-</view>
-<scroll-view wx:else scroll-y class="deckRl" style="height:{{scrollHeight}}px;" enable-back-to-top="true">
-  <view class="card_deck" wx:for="{{decksData}}" data-index="{{index}}" bindtap="toSinglePage">
-    <!-- <view class="BGI" style="background-image: url(/images/hero_{{item.classes}}.jpg)"></view>  -->
-    <image class="BGI" src="/images/hero_{{item.classes}}.jpg"></image>
-    <view class="BGI_mask"></view>
-    <image class="class" src="/images/icon_{{item.classes}}.jpg"></image>
-    <text class="name">{{item.archetype}}</text>
-    <view class="dust">
-      <image src="/images/icon_dust.png"></image>
-      <text>{{item.dust}}</text>
+<view class='thead'>
+  <picker mode='multiSelector' bindchange='bindMultiPickerChange' bindcolumnchange='bindMultiPickerColumnChange' value='{{aMultiIndex}}' range='{{aMultiList}}'>
+    <view class='picker'>
+      <text>筛选</text>
+      <text class='iconfont icon-shaixuan'></text>
     </view>
+  </picker>
+  <view bindtap='sortBtn' data-filter='win_rate' class='win_rate'>
+    <text>胜率</text>
+    <text class="iconfont {{bSortByGames?'icon-sort':'icon-xiangxia1'}} {{!bSortByGames}}"></text>
+  </view>
+  <view bindtap='sortBtn' data-filter='total_games' class='games'>
+    <text>对局</text>
+    <text class="iconfont {{bSortByGames?'icon-xiangxia1':'icon-sort'}} {{bSortByGames}}"></text>
+  </view>
+</view>
+<view wx:if='{{bEmptyList}}' class='empty' style='height:{{nScrollH}}px;'>
+  <icon type='info' size='70' />
+  <text>该筛选条件下暂无内容</text>
+  <button bindtap='resetPicker'>重置筛选</button>
+</view>
+<scroll-view wx:else scroll-y class='deckRl' style='height:{{nScrollH}}px;' enable-back-to-top='true'>
+  <view class='card_deck' wx:for='{{oPages.curList}}' data-index='{{index}}' bindtap='toSinglePage'>
+    <image class='BGI' src='https://wxapp-1257102469.cos.ap-shanghai.myqcloud.com/images/heros/{{item.classes}}.jpg'></image>
+    <view class='BGI_mask'></view>
+    <view class='info'>
+      <image src='https://wxapp-1257102469.cos.ap-shanghai.myqcloud.com/images/heros/icon_{{item.classes}}.jpg'></image>
+      <text>{{item.archetype}}</text>
+    </view>
+    <text class='win_rate'>{{item.win_rate}}%</text>
+    <text class='games'>{{item.total_games}}</text>
   </view>
 </scroll-view>
+<view class='pagination'>
+  <button bindtap='bindPagePrev' disabled='{{oPages.curIndex<=1}}'>上页</button>
+  <view>{{oPages.curIndex}}/{{oPages.allIndex}}</view>
+  <button bindtap='bindPageNext' disabled='{{oPages.curIndex>=oPages.allIndex}}'>下页</button>
+</view>
