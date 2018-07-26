@@ -61,5 +61,5 @@
     <text class="sectionTitle">稀有度分布</text>
     <canvas canvas-id="rarityCanvas" style="width:{{gWidth}}px;height: {{gWidth*0.5}}px;"></canvas>
   </view>
-  <view class="toHome" bindtap="toHome"><text class="iconfont icon-home"></text></view>
+  <view class="toHome" bindtap="toHome"><text class="iconfont icon-rollback" style="font-size:150%;"></text></view>
 </view>
