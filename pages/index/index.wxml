@@ -18,7 +18,7 @@
     <view class='header'>
     </view>
     <view class='preview'>
-      <view wx:for='{{curWinrateList}}' bindtap='toFindPage' data-index='{{item.index}}' class='preview-item'>
+      <view wx:for='{{curWinrateList}}' bindtap='toFindPage' data-index='{{item.index}}' data-classes='{{item.classesEN}}' class='preview-item'>
         <image mode='widthFix' src='https://wxapp-1257102469.cos.ap-shanghai.myqcloud.com/images/heros/{{item.classesEN}}.jpg'></image>
         <view class='name'>#{{index+1}} {{item.classes}}</view>
         <view wx:if='{{isWinrate}}' class='percent'>{{item.win_rate}}%</view>

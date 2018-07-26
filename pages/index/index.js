@@ -149,7 +149,10 @@ Page({
   },
 
   toFindPage: function(e) {
-    app.globalData.index2findArg = e.currentTarget.dataset.index;
+    app.globalData.index2findArg = {
+      index: e.currentTarget.dataset.index,
+      classes: e.currentTarget.dataset.classes
+    }
     wx.switchTab({
       url: '../find/find'
     });
