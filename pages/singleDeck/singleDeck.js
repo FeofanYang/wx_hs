@@ -356,9 +356,9 @@ Page({
   // 分享设置
   onShareAppMessage: function(res) {
     // 设置分享标题
-    let arr = this.data.deckData.share
+    let arr = this.data.deckData.share;
     let shareName;
-    if (arr != []) {
+    if (arr.length>0) {
       shareName = arr[Math.floor(Math.random() * arr.length)];
     } else {
       shareName = '小精灵';
