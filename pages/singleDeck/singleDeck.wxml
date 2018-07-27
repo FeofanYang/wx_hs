@@ -1,5 +1,4 @@
-<view wx:if="{{isLoading}}"></view>
-<view wx:else class="container">
+<view class="container">
   <view class="section cardList">
     <view class="classCardList">
       <text class="sectionTitle">职业卡 ({{30 - deckData.cardsNeutralCount}})</text>

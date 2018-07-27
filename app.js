@@ -24,7 +24,7 @@ App({
           data: res.data
         });
         wx.request({
-          url: 'https://wxapp-1257102469.cos.ap-shanghai.myqcloud.com/decks_list.json',
+          url: 'https://wxapp-1257102469.cos.ap-shanghai.myqcloud.com/decks.json',
           success: function(res) {
             that.globalData.decksData = res.data.series.data;
             wx.setStorage({
