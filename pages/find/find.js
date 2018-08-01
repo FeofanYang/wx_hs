@@ -107,6 +107,10 @@ Page({
 
   onLoad: function() {
     let that = this;
+    wx.showLoading({
+      mask: true,
+      title: '请求数据中…',
+    });
     // 获取页面高度
     wx.getSystemInfo({
       success: function(res) {
@@ -115,43 +119,29 @@ Page({
         });
       }
     });
-    // 如果可以优先从缓存中读取，否则读取全局变量
+    // 读取“卡组&卡组名”数据
     let _decks = wx.getStorageSync('decks');
-    let _types = wx.getStorageSync('types');
-    if (_decks && _types) {
-      console.log('---从缓存中读取---');
-      wx.showLoading({
-        mask: true,
-        title: '加载数据中…',
-      });
+    if (_decks) {
       this.setData({
-        ResDecksList: _decks,
-        ResArchetypes: _types
+        ResDecksList: _decks
       });
-      this.setList();
-      wx.hideLoading();
     } else {
-      console.log('---从请求 or 全局变量中读取---');
-      wx.showLoading({
-        mask: true,
-        title: '请求数据中…',
-      });
-      wx.request({
-        url: 'https://wxapp-1257102469.cos.ap-shanghai.myqcloud.com/archetypes.json',
-        success: function(res) {
-          that.setData({
-            ResDecksList: app.globalData.decksData,
-            ResArchetypes: res.data
-          });
-          wx.setStorage({
-            key: "types",
-            data: that.data.ResArchetypes
-          });
-          that.setList();
-          wx.hideLoading();
-        }
+      this.setData({
+        ResDecksList: app.globalData.decksData,
       });
     }
+    let _types = wx.getStorageSync('types');
+    if (_types) {
+      this.setData({
+        ResArchetypes: _types
+      });
+    } else {
+      this.setData({
+        ResArchetypes: app.globalData.oTypes
+      });
+    }
+    that.setList();
+    wx.hideLoading();
   },
 
   onShow: function() {

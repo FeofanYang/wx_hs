@@ -1,5 +1,6 @@
 const app = getApp();
 Page({
+
   data: {
     deckData: null,
     cardsData: null,
@@ -9,19 +10,46 @@ Page({
   onLoad: function(options) {
     let that = this;
     wx.showLoading({
-      title: '读取卡组中',
+      title: '读取卡组中…',
     })
-    // 如果可以优先从缓存中读取，否则读取全局变量
+    // 读取“卡牌”数据
     const cards = wx.getStorageSync('cards');
     if (cards) {
       this.setData({
         cardsData: cards
       });
-    } else {
+      this.onLoadNext(options);
+    } else if (app.globalData.cardsData) {
       this.setData({
-        cardsData: app.globalData.cards
+        cardsData: app.globalData.cardsData
+      });
+      this.onLoadNext(options);
+    } else {
+      wx.request({
+        url: 'https://wxapp-1257102469.cos.ap-shanghai.myqcloud.com/cards.json',
+        success: function(res) {
+          app.globalData.cardsData = res.data;
+          wx.setStorage({
+            key: "cards",
+            data: res.data
+          });
+          that.setData({
+            cardsData: res.data
+          })
+          that.onLoadNext(options);
+        },
+        fail: function() {
+          wx.showToast({
+            title: '加载数据失败，请删除小程序后重新进入',
+            duration: 10000
+          })
+        }
       });
     }
+  },
+
+  onLoadNext: function(options) {
+    let that = this;
     // 从 find 页面进入 (读取到 find 传参)
     if (app.globalData.find2singleArg != null) {
       this.setData({
@@ -29,11 +57,27 @@ Page({
       });
     }
     // 从转发进入 (读取到分享链接参数)
-    if (options.id != undefined) {
+    if (options.id) {
       let data = app.globalData.decksData;
+      let types;
+      let _types = wx.getStorageSync('types');
+      if (_types) {
+        types = _types
+      } else {
+        types: app.globalData.oTypes
+      }
       for (let c in data) {
         for (let d in data[c]) {
           if (data[c][d].deck_id == options.id) {
+            data[c][d]['classes'] = c.toLowerCase();
+            // 设置 classes 属性
+            let classes = data[c][d]['classes'];
+            // 添加中文卡组名
+            for (let t in types) {
+              if (data[c][d]['archetype_id'] == t) {
+                data[c][d]['archetype'] = types[t]
+              }
+            }
             this.setData({
               deckData: data[c][d]
             });
@@ -42,16 +86,10 @@ Page({
         }
       }
     }
-  },
-
-  onShow: function() {
-    let that = this;
     // 修改页面标题
-    if (this.data.deckData.archetype) {
-      wx.setNavigationBarTitle({
-        title: this.data.deckData.archetype
-      });
-    }
+    wx.setNavigationBarTitle({
+      title: this.data.deckData.archetype
+    });
     // 获取设备宽度
     wx.getSystemInfo({
       success: function(res) {
@@ -61,10 +99,10 @@ Page({
         })
       }
     })
-    let deck = this.data.deckData,
-      cards = this.data.cardsData;
+    let deckD = this.data.deckData,
+      cardsD = this.data.cardsData;
     // 遍历卡牌，获取对象列表
-    let cardsAllObj = this.getCardsObj(deck, cards);
+    let cardsAllObj = this.getCardsObj(deckD, cardsD);
     // 遍历卡组，获取分类数组
     let checkDeckRes = this.checkDeck(cardsAllObj);
     let typeArg = checkDeckRes.typeArg;
@@ -310,10 +348,352 @@ Page({
     ctx.draw();
   },
 
-  // 复制卡组代码
+  toHome: function () {
+    wx.switchTab({
+      url: '/pages/find/find',
+    })
+  },
+
+  onShareAppMessage: function (res) {
+    // 设置分享标题
+    let arr = this.data.deckData.share;
+    let shareName;
+    if (arr.length > 0) {
+      shareName = arr[Math.floor(Math.random() * arr.length)];
+    } else {
+      shareName = '小精灵';
+    }
+    // 传参
+    let arg = this.data.deckData.deck_id;
+    if (this.data.deckData.archetype) {
+      return {
+        title: shareName + '向你推荐「' + this.data.deckData.archetype + '」',
+        path: '/pages/singleDeck/singleDeck?id=' + arg,
+      }
+    } else {
+      return {
+        title: shareName + '向你推荐了一套神秘卡组',
+        path: '/pages/singleDeck/singleDeck?id=' + arg,
+      }
+    }
+  },
+
   copyCode: function() {
     // 编码解码卡组代码
-    var encode_1 = encode; var MSB = 0x80; var REST = 0x7F; var MSBALL = ~REST; var INT = Math.pow(2, 31); function encode(num, out, offset) { out = out || []; offset = offset || 0; var oldOffset = offset; while (num >= INT) { out[offset++] = (num & 0xFF) | MSB; num /= 128 } while (num & MSBALL) { out[offset++] = (num & 0xFF) | MSB; num >>>= 7 } out[offset] = num | 0; encode.bytes = offset - oldOffset + 1; return out } var decode = read; var MSB$1 = 0x80; var REST$1 = 0x7F; function read(buf, offset) { var res = 0, offset = offset || 0, shift = 0, counter = offset, b, l = buf.length; do { if (counter >= l) { read.bytes = 0; throw new RangeError('Could not decode varint') } b = buf[counter++]; res += shift < 28 ? (b & REST$1) << shift : (b & REST$1) * Math.pow(2, shift); shift += 7 } while (b >= MSB$1) read.bytes = counter - offset; return res } var N1 = Math.pow(2, 7); var N2 = Math.pow(2, 14); var N3 = Math.pow(2, 21); var N4 = Math.pow(2, 28); var N5 = Math.pow(2, 35); var N6 = Math.pow(2, 42); var N7 = Math.pow(2, 49); var N8 = Math.pow(2, 56); var N9 = Math.pow(2, 63); var length = function (value) { return (value < N1 ? 1 : value < N2 ? 2 : value < N3 ? 3 : value < N4 ? 4 : value < N5 ? 5 : value < N6 ? 6 : value < N7 ? 7 : value < N8 ? 8 : value < N9 ? 9 : 10) }; var varint = { encode: encode_1, decode: decode, encodingLength: length }; function __extends(d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; function __() { this.constructor = d } d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __()) } function atob_binary(encoded) { return _atob(encoded) } function btoa_binary(decoded) { return _btoa(decoded) } var base64hash = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'; function _atob(s) { s = s.replace(/\s|=/g, ''); var cur, prev, mod, i = 0, result = []; while (i < s.length) { cur = base64hash.indexOf(s.charAt(i)); mod = i % 4; switch (mod) { case 0: break; case 1: result.push(String.fromCharCode(prev << 2 | cur >> 4)); break; case 2: result.push(String.fromCharCode((prev & 0x0f) << 4 | cur >> 2)); break; case 3: result.push(String.fromCharCode((prev & 3) << 6 | cur)); break }prev = cur; i++ } return result.join('') } function _btoa(s) { if (/([^\u0000-\u00ff])/.test(s)) { throw new Error('INVALID_CHARACTER_ERR'); } var i = 0, prev, ascii, mod, result = []; while (i < s.length) { ascii = s.charCodeAt(i); mod = i % 3; switch (mod) { case 0: result.push(base64hash.charAt(ascii >> 2)); break; case 1: result.push(base64hash.charAt((prev & 3) << 4 | (ascii >> 4))); break; case 2: result.push(base64hash.charAt((prev & 0x0f) << 2 | (ascii >> 6))); result.push(base64hash.charAt(ascii & 0x3f)); break }prev = ascii; i++ } if (mod == 0) { result.push(base64hash.charAt((prev & 3) << 4)); result.push('==') } else if (mod == 1) { result.push(base64hash.charAt((prev & 0x0f) << 2)); result.push('=') } return result.join('') } var Iterator = (function () { function Iterator() { this.index = 0 } Iterator.prototype.next = function (repeat) { if (repeat === void 0) { repeat = 1 } this.index += repeat }; return Iterator }()); var BufferWriter = (function (_super) { __extends(BufferWriter, _super); function BufferWriter() { var _this = _super.call(this) || this; _this.buffer = []; return _this } BufferWriter.prototype.null = function () { this.buffer[this.index] = 0; this.next() }; BufferWriter.prototype.varint = function (value) { varint.encode(value, this.buffer, this.index); this.next(varint.encode.bytes) }; BufferWriter.prototype.toString = function () { var binary = String.fromCharCode.apply(String, this.buffer); return btoa_binary(binary) }; return BufferWriter }(Iterator)); var BufferReader = (function (_super) { __extends(BufferReader, _super); function BufferReader(string) { var _this = _super.call(this) || this; var binary = atob_binary(string); var buffer = new Uint8Array(binary.length); for (var i = 0; i < binary.length; i++) { buffer[i] = binary.charCodeAt(i) } _this.buffer = buffer; return _this } BufferReader.prototype.nextByte = function () { var value = this.buffer[this.index]; this.next(); return value }; BufferReader.prototype.nextVarint = function () { var value = varint.decode(this.buffer, this.index); this.next(varint.decode.bytes); return value }; return BufferReader }(Iterator)); var DECKSTRING_VERSION = 1; function verifyDbfId(id, name) { name = name ? name : "dbf id"; if (!isPositiveNaturalNumber(id)) { throw new Error("Invalid " + name + " " + id + " (expected valid dbf id)"); } } function isPositiveNaturalNumber(n) { if (typeof n !== "number" || !isFinite(n)) { return false } if (Math.floor(n) !== n) { return false } return n > 0 } function sorted_cards(cards) { return cards.sort(function (a, b) { return (a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0) }) } function trisort_cards(cards) { var single = [], double = [], n = []; for (var _i = 0, cards_1 = cards; _i < cards_1.length; _i++) { var tuple = cards_1[_i]; var list = void 0; var card = tuple[0], count = tuple[1]; verifyDbfId(card, "card"); if (count === 0) { continue } if (count === 1) { list = single } else if (count === 2) { list = double } else if (isPositiveNaturalNumber(count)) { list = n } else { throw new Error("Invalid count " + count + " (expected positive natural number)"); } list.push(tuple) } return [single, double, n] } function encode$1(deck) { if (typeof deck !== "object" || (deck.format !== 1 && deck.format !== 2) || !Array.isArray(deck.heroes) || !Array.isArray(deck.cards)) { throw new Error("Invalid deck definition"); } var writer = new BufferWriter(); var format = deck.format; var heroes = deck.heroes.slice().sort(); var cards = sorted_cards(deck.cards.slice()); writer.null(); writer.varint(DECKSTRING_VERSION); writer.varint(format); writer.varint(heroes.length); for (var _i = 0, heroes_1 = heroes; _i < heroes_1.length; _i++) { var hero = heroes_1[_i]; verifyDbfId(hero, "hero"); writer.varint(hero) } for (var _a = 0, _b = trisort_cards(cards); _a < _b.length; _a++) { var list = _b[_a]; writer.varint(list.length); for (var _c = 0, list_1 = list; _c < list_1.length; _c++) { var tuple = list_1[_c]; var card = tuple[0], count = tuple[1]; writer.varint(card); if (count !== 1 && count !== 2) { writer.varint(count) } } } return writer.toString() } function decode$2(deckstring) { var reader = new BufferReader(deckstring); if (reader.nextByte() !== 0) { throw new Error("Invalid deckstring"); } var version = reader.nextVarint(); if (version !== DECKSTRING_VERSION) { throw new Error("Unsupported deckstring version " + version); } var format = reader.nextVarint(); if (format !== 1 && format !== 2) { throw new Error("Unsupported format " + format + " in deckstring"); } var heroes = new Array(reader.nextVarint()); for (var i = 0; i < heroes.length; i++) { heroes[i] = reader.nextVarint() } heroes.sort(); var cards = []; for (var i = 1; i <= 3; i++) { for (var j = 0, c = reader.nextVarint(); j < c; j++) { cards.push([reader.nextVarint(), i === 1 || i === 2 ? i : reader.nextVarint(),]) } } sorted_cards(cards); return { cards: cards, heroes: heroes, format: format, } }
+    var encode_1 = encode;
+    var MSB = 0x80;
+    var REST = 0x7F;
+    var MSBALL = ~REST;
+    var INT = Math.pow(2, 31);
+
+    function encode(num, out, offset) {
+      out = out || [];
+      offset = offset || 0;
+      var oldOffset = offset;
+      while (num >= INT) {
+        out[offset++] = (num & 0xFF) | MSB;
+        num /= 128
+      }
+      while (num & MSBALL) {
+        out[offset++] = (num & 0xFF) | MSB;
+        num >>>= 7
+      }
+      out[offset] = num | 0;
+      encode.bytes = offset - oldOffset + 1;
+      return out
+    }
+    var decode = read;
+    var MSB$1 = 0x80;
+    var REST$1 = 0x7F;
+
+    function read(buf, offset) {
+      var res = 0,
+        offset = offset || 0,
+        shift = 0,
+        counter = offset,
+        b, l = buf.length;
+      do {
+        if (counter >= l) {
+          read.bytes = 0;
+          throw new RangeError('Could not decode varint')
+        }
+        b = buf[counter++];
+        res += shift < 28 ? (b & REST$1) << shift : (b & REST$1) * Math.pow(2, shift);
+        shift += 7
+      } while (b >= MSB$1) read.bytes = counter - offset;
+      return res
+    }
+    var N1 = Math.pow(2, 7);
+    var N2 = Math.pow(2, 14);
+    var N3 = Math.pow(2, 21);
+    var N4 = Math.pow(2, 28);
+    var N5 = Math.pow(2, 35);
+    var N6 = Math.pow(2, 42);
+    var N7 = Math.pow(2, 49);
+    var N8 = Math.pow(2, 56);
+    var N9 = Math.pow(2, 63);
+    var length = function(value) {
+      return (value < N1 ? 1 : value < N2 ? 2 : value < N3 ? 3 : value < N4 ? 4 : value < N5 ? 5 : value < N6 ? 6 : value < N7 ? 7 : value < N8 ? 8 : value < N9 ? 9 : 10)
+    };
+    var varint = {
+      encode: encode_1,
+      decode: decode,
+      encodingLength: length
+    };
+
+    function __extends(d, b) {
+      for (var p in b)
+        if (b.hasOwnProperty(p)) d[p] = b[p];
+
+      function __() {
+        this.constructor = d
+      }
+      d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __())
+    }
+
+    function atob_binary(encoded) {
+      return _atob(encoded)
+    }
+
+    function btoa_binary(decoded) {
+      return _btoa(decoded)
+    }
+    var base64hash = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+
+    function _atob(s) {
+      s = s.replace(/\s|=/g, '');
+      var cur, prev, mod, i = 0,
+        result = [];
+      while (i < s.length) {
+        cur = base64hash.indexOf(s.charAt(i));
+        mod = i % 4;
+        switch (mod) {
+          case 0:
+            break;
+          case 1:
+            result.push(String.fromCharCode(prev << 2 | cur >> 4));
+            break;
+          case 2:
+            result.push(String.fromCharCode((prev & 0x0f) << 4 | cur >> 2));
+            break;
+          case 3:
+            result.push(String.fromCharCode((prev & 3) << 6 | cur));
+            break
+        }
+        prev = cur;
+        i++
+      }
+      return result.join('')
+    }
+
+    function _btoa(s) {
+      if (/([^\u0000-\u00ff])/.test(s)) {
+        throw new Error('INVALID_CHARACTER_ERR');
+      }
+      var i = 0,
+        prev, ascii, mod, result = [];
+      while (i < s.length) {
+        ascii = s.charCodeAt(i);
+        mod = i % 3;
+        switch (mod) {
+          case 0:
+            result.push(base64hash.charAt(ascii >> 2));
+            break;
+          case 1:
+            result.push(base64hash.charAt((prev & 3) << 4 | (ascii >> 4)));
+            break;
+          case 2:
+            result.push(base64hash.charAt((prev & 0x0f) << 2 | (ascii >> 6)));
+            result.push(base64hash.charAt(ascii & 0x3f));
+            break
+        }
+        prev = ascii;
+        i++
+      }
+      if (mod == 0) {
+        result.push(base64hash.charAt((prev & 3) << 4));
+        result.push('==')
+      } else if (mod == 1) {
+        result.push(base64hash.charAt((prev & 0x0f) << 2));
+        result.push('=')
+      }
+      return result.join('')
+    }
+    var Iterator = (function() {
+      function Iterator() {
+        this.index = 0
+      }
+      Iterator.prototype.next = function(repeat) {
+        if (repeat === void 0) {
+          repeat = 1
+        }
+        this.index += repeat
+      };
+      return Iterator
+    }());
+    var BufferWriter = (function(_super) {
+      __extends(BufferWriter, _super);
+
+      function BufferWriter() {
+        var _this = _super.call(this) || this;
+        _this.buffer = [];
+        return _this
+      }
+      BufferWriter.prototype.null = function() {
+        this.buffer[this.index] = 0;
+        this.next()
+      };
+      BufferWriter.prototype.varint = function(value) {
+        varint.encode(value, this.buffer, this.index);
+        this.next(varint.encode.bytes)
+      };
+      BufferWriter.prototype.toString = function() {
+        var binary = String.fromCharCode.apply(String, this.buffer);
+        return btoa_binary(binary)
+      };
+      return BufferWriter
+    }(Iterator));
+    var BufferReader = (function(_super) {
+      __extends(BufferReader, _super);
+
+      function BufferReader(string) {
+        var _this = _super.call(this) || this;
+        var binary = atob_binary(string);
+        var buffer = new Uint8Array(binary.length);
+        for (var i = 0; i < binary.length; i++) {
+          buffer[i] = binary.charCodeAt(i)
+        }
+        _this.buffer = buffer;
+        return _this
+      }
+      BufferReader.prototype.nextByte = function() {
+        var value = this.buffer[this.index];
+        this.next();
+        return value
+      };
+      BufferReader.prototype.nextVarint = function() {
+        var value = varint.decode(this.buffer, this.index);
+        this.next(varint.decode.bytes);
+        return value
+      };
+      return BufferReader
+    }(Iterator));
+    var DECKSTRING_VERSION = 1;
+
+    function verifyDbfId(id, name) {
+      name = name ? name : "dbf id";
+      if (!isPositiveNaturalNumber(id)) {
+        throw new Error("Invalid " + name + " " + id + " (expected valid dbf id)");
+      }
+    }
+
+    function isPositiveNaturalNumber(n) {
+      if (typeof n !== "number" || !isFinite(n)) {
+        return false
+      }
+      if (Math.floor(n) !== n) {
+        return false
+      }
+      return n > 0
+    }
+
+    function sorted_cards(cards) {
+      return cards.sort(function(a, b) {
+        return (a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0)
+      })
+    }
+
+    function trisort_cards(cards) {
+      var single = [],
+        double = [],
+        n = [];
+      for (var _i = 0, cards_1 = cards; _i < cards_1.length; _i++) {
+        var tuple = cards_1[_i];
+        var list = void 0;
+        var card = tuple[0],
+          count = tuple[1];
+        verifyDbfId(card, "card");
+        if (count === 0) {
+          continue
+        }
+        if (count === 1) {
+          list = single
+        } else if (count === 2) {
+          list = double
+        } else if (isPositiveNaturalNumber(count)) {
+          list = n
+        } else {
+          throw new Error("Invalid count " + count + " (expected positive natural number)");
+        }
+        list.push(tuple)
+      }
+      return [single, double, n]
+    }
+
+    function encode$1(deck) {
+      if (typeof deck !== "object" || (deck.format !== 1 && deck.format !== 2) || !Array.isArray(deck.heroes) || !Array.isArray(deck.cards)) {
+        throw new Error("Invalid deck definition");
+      }
+      var writer = new BufferWriter();
+      var format = deck.format;
+      var heroes = deck.heroes.slice().sort();
+      var cards = sorted_cards(deck.cards.slice());
+      writer.null();
+      writer.varint(DECKSTRING_VERSION);
+      writer.varint(format);
+      writer.varint(heroes.length);
+      for (var _i = 0, heroes_1 = heroes; _i < heroes_1.length; _i++) {
+        var hero = heroes_1[_i];
+        verifyDbfId(hero, "hero");
+        writer.varint(hero)
+      }
+      for (var _a = 0, _b = trisort_cards(cards); _a < _b.length; _a++) {
+        var list = _b[_a];
+        writer.varint(list.length);
+        for (var _c = 0, list_1 = list; _c < list_1.length; _c++) {
+          var tuple = list_1[_c];
+          var card = tuple[0],
+            count = tuple[1];
+          writer.varint(card);
+          if (count !== 1 && count !== 2) {
+            writer.varint(count)
+          }
+        }
+      }
+      return writer.toString()
+    }
+
+    function decode$2(deckstring) {
+      var reader = new BufferReader(deckstring);
+      if (reader.nextByte() !== 0) {
+        throw new Error("Invalid deckstring");
+      }
+      var version = reader.nextVarint();
+      if (version !== DECKSTRING_VERSION) {
+        throw new Error("Unsupported deckstring version " + version);
+      }
+      var format = reader.nextVarint();
+      if (format !== 1 && format !== 2) {
+        throw new Error("Unsupported format " + format + " in deckstring");
+      }
+      var heroes = new Array(reader.nextVarint());
+      for (var i = 0; i < heroes.length; i++) {
+        heroes[i] = reader.nextVarint()
+      }
+      heroes.sort();
+      var cards = [];
+      for (var i = 1; i <= 3; i++) {
+        for (var j = 0, c = reader.nextVarint(); j < c; j++) {
+          cards.push([reader.nextVarint(), i === 1 || i === 2 ? i : reader.nextVarint(), ])
+        }
+      }
+      sorted_cards(cards);
+      return {
+        cards: cards,
+        heroes: heroes,
+        format: format,
+      }
+    }
     // 编码卡组赋值
     let _class = this.data.deckData.classes;
     if (_class == 'paladin') {
@@ -353,34 +733,4 @@ Page({
     })
   },
 
-  // 分享设置
-  onShareAppMessage: function(res) {
-    // 设置分享标题
-    let arr = this.data.deckData.share;
-    let shareName;
-    if (arr.length>0) {
-      shareName = arr[Math.floor(Math.random() * arr.length)];
-    } else {
-      shareName = '小精灵';
-    }
-    // 传参
-    let arg = this.data.deckData.deck_id;
-    if (this.data.deckData.archetype) {
-      return {
-        title: shareName + '向你推荐「' + this.data.deckData.archetype + '」',
-        path: '/pages/singleDeck/singleDeck?id=' + arg,
-      }
-    } else {
-      return {
-        title: shareName + '向你推荐了一套神秘卡组',
-        path: '/pages/singleDeck/singleDeck?id=' + arg,
-      }
-    }
-  },
-
-  toHome: function() {
-    wx.switchTab({
-      url: '/pages/find/find',
-    })
-  },
 })

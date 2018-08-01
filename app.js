@@ -3,6 +3,7 @@ App({
   globalData: {
     cardsData: null,
     decksData: null,
+    oTypes: null,
     index2findArg: null,
     find2singleArg: null,
   },
@@ -14,22 +15,21 @@ App({
       title: '加载数据中…',
     });
     wx.hideTabBar();
-    // 请求卡牌数据
     wx.request({
-      url: 'https://wxapp-1257102469.cos.ap-shanghai.myqcloud.com/cards.json',
+      url: 'https://wxapp-1257102469.cos.ap-shanghai.myqcloud.com/decks.json',
       success: function(res) {
-        that.globalData.cardsData = res.data;
+        that.globalData.decksData = res.data.series.data;
         wx.setStorage({
-          key: "cards",
-          data: res.data
+          key: "decks",
+          data: res.data.series.data
         });
         wx.request({
-          url: 'https://wxapp-1257102469.cos.ap-shanghai.myqcloud.com/decks.json',
+          url: 'https://wxapp-1257102469.cos.ap-shanghai.myqcloud.com/archetypes.json',
           success: function(res) {
-            that.globalData.decksData = res.data.series.data;
+            that.globalData.oTypes = res.data;
             wx.setStorage({
-              key: "decks",
-              data: res.data.series.data
+              key: "types",
+              data: res.data
             });
             wx.hideLoading();
             wx.showTabBar();
