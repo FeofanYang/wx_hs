@@ -30,6 +30,10 @@ Page({
 
   onLoad: function() {
     let that = this;
+    let day = new Date();
+    wx.setNavigationBarTitle({
+      title: '每日排行 ' + day.getFullYear() + '-' + (day.getMonth() + 1) + '-' + day.getDate(),
+    })
     wx.request({
       url: 'https://wxapp-1257102469.cos.ap-shanghai.myqcloud.com/winrate.json',
       success: function(res) {
@@ -44,11 +48,6 @@ Page({
           winrateRes: that.data.winrateRes,
           curWinrateList: that.data.winrateList['standard'],
           winrateList: list
-        })
-        let day = that.data.winrateRes.as_of;
-        day = day.split('T')[0];
-        wx.setNavigationBarTitle({
-          title: '每日排行 ' + day,
         })
       },
     })
