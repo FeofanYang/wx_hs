@@ -102,7 +102,9 @@ Page({
     aMultiIndex: [0, 0, 0],
     aFilterList: null,
     bEmptyList: false,
+    bLoadIng: true,
     nScrollH: null,
+    nScrollT: 0,
   },
 
   onLoad: function() {
@@ -115,7 +117,7 @@ Page({
     wx.getSystemInfo({
       success: function(res) {
         that.setData({
-          nScrollH: res.windowHeight - 60 - 80
+          nScrollH: res.windowHeight - 60
         });
       }
     });
@@ -140,8 +142,11 @@ Page({
         ResArchetypes: app.globalData.oTypes
       });
     }
-    that.setList();
+    this.setList();
     wx.hideLoading();
+    this.setData({
+      bLoadIng: false
+    })
   },
 
   onShow: function() {
@@ -233,6 +238,7 @@ Page({
       ['oPages.allList']: _shortList,
       ['oPages.curList']: curList,
       ['oPages.allIndex']: allIndex,
+      nScrollT: 0
     });
     wx.hideLoading();
   },
