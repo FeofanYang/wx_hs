@@ -113,7 +113,7 @@ Page({
     });
     // 绘制 canvas
     this.drawArc('typeCanvas', typeArg);
-    this.drawArc('rarityCanvas', rarityArg);
+    // this.drawArc('rarityCanvas', rarityArg);
     wx.hideLoading();
   },
 
@@ -304,20 +304,19 @@ Page({
   drawArc: function(canvasId, typeArg) {
     let ctx = wx.createCanvasContext(canvasId)
     let width = this.data.gWidth,
-      padding = 50,
+      padding = 10,
       textPadding = 30;
     // 半径 & 圆心
-    let radius = width * 0.5 * 0.6 - padding * 0.5,
-      ox = radius + width * 0.4,
-      oy = radius;
+    let radius = width * 0.5 * 0.3,
+      ox = radius + width * 0.5 * 0.2,
+      oy = radius + padding;
     // 弧度开始 & 结束
     let startAngle = 0,
       endAngle = 0;
     // 图例
     let pwidth = 10,
-      pheight = 10,
-      posX = padding,
-      posY = pheight + textPadding;
+      posX = pwidth + padding,
+      posY = (radius + padding) * 2 + padding;
     // 文字开始位置
     let textX = posX + pwidth + 5,
       textY = posY + 5;
@@ -332,7 +331,11 @@ Page({
         ctx.arc(ox, oy, radius, startAngle, endAngle, true);
         ctx.closePath();
         // 绘制图例
-        ctx.arc(posX, posY + textPadding * count, 8, 0, 2 * Math.PI);
+        if (count % 2 == 0) {
+          ctx.arc(posX, posY + textPadding * Math.floor(count/2), 8, 0, 2 * Math.PI);
+        } else {
+          ctx.arc(posX + width*0.5*0.45, posY + textPadding * Math.floor(count / 2), 8, 0, 2 * Math.PI);
+        }
         ctx.closePath();
         ctx.fill();
         endAngle = startAngle;
@@ -341,20 +344,24 @@ Page({
         ctx.fillStyle = '#000';
         ctx.font = "16px 微软雅黑";
         let text = typeArg[i].name + "×" + typeArg[i].count;
-        ctx.fillText(text, textX, textY + textPadding * count);
+        if (count % 2 == 0) {
+          ctx.fillText(text, posX + 10, posY + textPadding * Math.floor(count / 2) + 6);
+        } else {
+          ctx.fillText(text, posX + 10 + width * 0.5 * 0.45, posY + textPadding * Math.floor(count / 2) + 6);
+        }
         count++;
       }
     }
     ctx.draw();
   },
 
-  toHome: function () {
+  toHome: function() {
     wx.switchTab({
       url: '/pages/find/find',
     })
   },
 
-  onShareAppMessage: function (res) {
+  onShareAppMessage: function(res) {
     // 设置分享标题
     let arr = this.data.deckData.share;
     let shareName;

@@ -5,21 +5,26 @@
 }
 
 .section {
-  padding: 10rpx 0;
+  padding: 10px 0;
   background-color: #fff;
   margin-bottom: 10rpx;
 }
 
 .sectionTitle {
   display: block;
-  margin-bottom: 10rpx;
-  text-align: center;
+  margin: 0 0 10px 10px;
 }
 
 .cardList {
   display: flex;
   flex-wrap: wrap;
   padding: 0 30rpx;
+}
+
+.listTitle {
+  display: block;
+  text-align: center;
+  margin-bottom: 10rpx;
 }
 
 .classCardList, .neutralCardList {
@@ -174,11 +179,19 @@
 
 /* 费用曲线 */
 
+.deckInfo {
+  display: flex;
+}
+
+.deckInfo > view {
+  width: 50%;
+}
+
 .cost {
   display: flex;
   justify-content: space-around;
   margin: 0 auto;
-  width: 75%;
+  padding: 0 10px;
   height: 300rpx;
 }
 
@@ -186,17 +199,18 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  width: 50rpx;
+  width: 30rpx;
   height: 100%;
 }
 
 .item .count {
   text-align: center;
+  color: #3188b8;
 }
 
 .item .col {
   flex: 0 0 auto;
-  width: 40rpx;
+  width: 30rpx;
   background-color: #3188b8;
   align-self: center;
   margin-bottom: 10rpx;
@@ -206,9 +220,9 @@
   position: relative;
   width: 100%;
   text-align: center;
-  height: 50rpx;
+  height: 30rpx;
   background-size: 100% 100%;
-  line-height: 50rpx;
+  line-height: 30rpx;
   color: #fff;
   text-shadow: -1px -1px 1px #000, 1px -1px 1px #000, -1px 1px 1px #000, 1px 1px 1px #000;
 }
@@ -226,4 +240,5 @@
   left: 50%;
   transform: translateX(-50%);
   -webkit-transform: translateX(-50%);
+  font-size: 25rpx;
 }
