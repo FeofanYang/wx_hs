@@ -28,7 +28,7 @@ Page({
     isWinrate: true
   },
 
-  onLoad: function () {
+  onLoad: function() {
     let that = this;
     let day = new Date();
     wx.setNavigationBarTitle({
@@ -50,7 +50,9 @@ Page({
           winrateList: list
         })
       },
-      fail: require('../../funtions.js').fnRequestFail()
+      fail: function() {
+        require('../../funtions.js').fnRequestFail()
+      }
     })
   },
 
