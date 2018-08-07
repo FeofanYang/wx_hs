@@ -11,7 +11,7 @@ Page({
     let that = this;
     wx.showLoading({
       title: '读取卡组中…',
-    })
+    });
     // 读取“卡牌”数据
     const cards = wx.getStorageSync('cards');
     if (cards) {
@@ -19,16 +19,10 @@ Page({
         cardsData: cards
       });
       this.onLoadNext(options);
-    } else if (app.globalData.cardsData) {
-      this.setData({
-        cardsData: app.globalData.cardsData
-      });
-      this.onLoadNext(options);
     } else {
       wx.request({
         url: 'https://wxapp-1257102469.cos.ap-shanghai.myqcloud.com/cards.json',
         success: function(res) {
-          app.globalData.cardsData = res.data;
           wx.setStorage({
             key: "cards",
             data: res.data
@@ -38,11 +32,8 @@ Page({
           })
           that.onLoadNext(options);
         },
-        fail: function() {
-          wx.showToast({
-            title: '加载数据失败，请删除小程序后重新进入',
-            duration: 10000
-          })
+        fail: function () {
+          require('../../funtions.js').fnRequestFail()
         }
       });
     }
@@ -64,7 +55,7 @@ Page({
       if (_types) {
         types = _types
       } else {
-        types: app.globalData.oTypes
+        types = app.globalData.oTypes
       }
       for (let c in data) {
         for (let d in data[c]) {
