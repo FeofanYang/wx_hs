@@ -107,12 +107,8 @@ Page({
     nScrollT: 0,
   },
 
-  onLoad: function() {
+  onLoad: function () {
     let that = this;
-    wx.showLoading({
-      mask: true,
-      title: '请求数据中…',
-    });
     // 获取页面高度
     wx.getSystemInfo({
       success: function(res) {
@@ -121,32 +117,76 @@ Page({
         });
       }
     });
-    // 读取“卡组&卡组名”数据
+    // 请求/读取 卡组列表&&卡组名
     let _decks = wx.getStorageSync('decks');
     if (_decks) {
+      console.log('请求到 decks');
       this.setData({
         ResDecksList: _decks
       });
+      this.getTypes();
     } else {
-      this.setData({
-        ResDecksList: app.globalData.decksData,
+      console.log('未请求到 decks，现场请求 decks');
+      wx.showLoading({
+        mask: true,
+        title: '请求列表中…',
       });
+      wx.request({
+        url: 'https://wxapp-1257102469.cos.ap-shanghai.myqcloud.com/decks.json',
+        success: function(res) {
+          console.log('现成请求 decks 完成');
+          wx.setStorage({
+            key: "decks",
+            data: res.data.series.data
+          });
+          that.setData({
+            ResDecksList: res.data.series.data
+          });
+          that.getTypes();
+          wx.hideLoading();
+        },
+        fail: function () {
+          require('../../funtions.js').fnRequestFail()
+        }
+      })
     }
+  },
+
+  getTypes: function() {
+    let that = this;
     let _types = wx.getStorageSync('types');
     if (_types) {
+      console.log('请求到 types');
       this.setData({
         ResArchetypes: _types
       });
+      this.setList();
     } else {
-      this.setData({
-        ResArchetypes: app.globalData.oTypes
+      console.log('未请求到 _types，现场请求 types');
+      wx.showLoading({
+        mask: true,
+        title: '请求卡组名中…',
+      });
+      wx.request({
+        url: 'https://wxapp-1257102469.cos.ap-shanghai.myqcloud.com/archetypes.json',
+        success: function(res) {
+          console.log('现成请求 types 完成');
+          wx.setStorage({
+            key: "types",
+            data: res.data
+          });
+          that.setData({
+            ResArchetypes: res.data
+          });
+          that.setList();
+          wx.hideLoading();
+        },
+        fail: function () {
+          require('../../funtions.js').fnRequestFail()
+        }
       });
     }
-    this.setList();
-    wx.hideLoading();
-    this.setData({
-      bLoadIng: false
-    })
+
   },
 
   onShow: function() {
@@ -158,11 +198,14 @@ Page({
         aMultiIndex: [0, arg.index, 0]
       });
       this.pagination(this.data.oSList[arg.classes].decks, this.data.oPages.curIndex, true);
-      arg = null;
+      app.globalData.index2findArg = null;
     }
   },
 
   setList: function() {
+    this.setData({
+      bLoadIng: false
+    })
     let decks = this.data.ResDecksList;
     let types = this.data.ResArchetypes;
     let oSList = this.data.oSList;
