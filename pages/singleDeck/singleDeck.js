@@ -8,8 +8,10 @@ Page({
   },
 
   onLoad: function(options) {
+
     let that = this;
     wx.showLoading({
+      mask: true,
       title: '读取卡组中…',
     });
     // 读取“卡牌”数据
@@ -18,7 +20,7 @@ Page({
       this.setData({
         cardsData: cards
       });
-      this.onLoadNext(options);
+      curOnLoad(options);
     } else {
       wx.request({
         url: 'https://wxapp-1257102469.cos.ap-shanghai.myqcloud.com/cards.json',
@@ -30,82 +32,85 @@ Page({
           that.setData({
             cardsData: res.data
           })
-          that.onLoadNext(options);
+          curOnLoad(options);
         },
-        fail: function () {
+        fail: function() {
           require('../../funtions.js').fnRequestFail()
         }
       });
     }
-  },
 
-  onLoadNext: function(options) {
-    let that = this;
-    // 从 find 页面进入 (读取到 find 传参)
-    if (app.globalData.find2singleArg != null) {
-      this.setData({
-        deckData: app.globalData.find2singleArg
-      });
-    }
-    // 从转发进入 (读取到分享链接参数)
-    if (options.id) {
-      let data = app.globalData.decksData;
-      let types;
-      let _types = wx.getStorageSync('types');
-      if (_types) {
-        types = _types
-      } else {
-        types = app.globalData.oTypes
+    function curOnLoad(options) {
+      // 从 find 页面进入 (读取到 find 传参)
+      if (app.globalData.find2singleArg != null) {
+        that.setData({
+          deckData: app.globalData.find2singleArg
+        });
+        exeData();
       }
-      for (let c in data) {
-        for (let d in data[c]) {
-          if (data[c][d].deck_id == options.id) {
-            data[c][d]['classes'] = c.toLowerCase();
-            // 设置 classes 属性
-            let classes = data[c][d]['classes'];
-            // 添加中文卡组名
-            for (let t in types) {
-              if (data[c][d]['archetype_id'] == t) {
-                data[c][d]['archetype'] = types[t]
+      // 从转发进入 (读取到分享链接参数)
+      if (options.id) {
+        let callback = function(_decks, _types) {
+          let data = _decks,
+            types = _types;
+          // 分享参数遍历正确的卡组信息与卡组名
+          for (let c in data) {
+            for (let d in data[c]) {
+              if (data[c][d].deck_id == options.id) {
+                data[c][d]['classes'] = c.toLowerCase();
+                // 设置 classes 属性
+                let classes = data[c][d]['classes'];
+                // 添加中文卡组名
+                for (let t in types) {
+                  if (data[c][d]['archetype_id'] == t) {
+                    data[c][d]['archetype'] = types[t]
+                  }
+                }
+                that.setData({
+                  deckData: data[c][d]
+                });
+                break;
               }
             }
-            this.setData({
-              deckData: data[c][d]
-            });
-            break;
           }
+          exeData();
         }
+        require('../../funtions.js').getDeckAndType(callback);
       }
     }
-    // 修改页面标题
-    wx.setNavigationBarTitle({
-      title: this.data.deckData.archetype
-    });
-    // 获取设备宽度
-    wx.getSystemInfo({
-      success: function(res) {
-        let width = res.windowWidth;
-        that.setData({
-          gWidth: width
-        })
-      }
-    })
-    let deckD = this.data.deckData,
-      cardsD = this.data.cardsData;
-    // 遍历卡牌，获取对象列表
-    let cardsAllObj = this.getCardsObj(deckD, cardsD);
-    // 遍历卡组，获取分类数组
-    let checkDeckRes = this.checkDeck(cardsAllObj);
-    let typeArg = checkDeckRes.typeArg;
-    let rarityArg = checkDeckRes.rarityArg;
-    // 修改数据
-    this.setData({
-      deckData: that.data.deckData,
-    });
-    // 绘制 canvas
-    this.drawArc('typeCanvas', typeArg);
-    // this.drawArc('rarityCanvas', rarityArg);
-    wx.hideLoading();
+
+    function exeData(){
+      // 修改页面标题
+      wx.setNavigationBarTitle({
+        title: that.data.deckData.archetype
+      });
+      // 获取设备宽度
+      wx.getSystemInfo({
+        success: function (res) {
+          let width = res.windowWidth;
+          that.setData({
+            gWidth: width
+          })
+        }
+      })
+      let deckD = that.data.deckData,
+        cardsD = that.data.cardsData;
+      // 遍历卡牌，获取对象列表
+      let cardsAllObj = that.getCardsObj(deckD, cardsD);
+      // 遍历卡组，获取分类数组
+      let checkDeckRes = that.checkDeck(cardsAllObj);
+      let typeArg = checkDeckRes.typeArg;
+      let rarityArg = checkDeckRes.rarityArg;
+      // 修改数据
+      that.setData({
+        deckData: that.data.deckData,
+      });
+      // 绘制 canvas
+      that.drawArc('typeCanvas', typeArg);
+      // that.drawArc('rarityCanvas', rarityArg);
+      wx.hideLoading();
+    }
+
   },
 
   getCardsObj: function(deck, cards) {
@@ -323,9 +328,9 @@ Page({
         ctx.closePath();
         // 绘制图例
         if (count % 2 == 0) {
-          ctx.arc(posX, posY + textPadding * Math.floor(count/2), 8, 0, 2 * Math.PI);
+          ctx.arc(posX, posY + textPadding * Math.floor(count / 2), 8, 0, 2 * Math.PI);
         } else {
-          ctx.arc(posX + width*0.5*0.45, posY + textPadding * Math.floor(count / 2), 8, 0, 2 * Math.PI);
+          ctx.arc(posX + width * 0.5 * 0.45, posY + textPadding * Math.floor(count / 2), 8, 0, 2 * Math.PI);
         }
         ctx.closePath();
         ctx.fill();
