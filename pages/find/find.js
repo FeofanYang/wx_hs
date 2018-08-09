@@ -109,6 +109,7 @@ Page({
 
   onLoad: function() {
     let that = this;
+    wx.clearStorage();
     // 获取页面高度
     wx.getSystemInfo({
       success: function(res) {

@@ -1,7 +1,7 @@
 function fnRequestFail() {
   wx.showModal({
     title: '错误提示',
-    content: '请求数据失败，页面可能无法正常显示。请尝试删除小程序后再次进入，给您带来的不变深表歉意T.T',
+    content: '请求数据失败，页面可能无法正常显示。请尝试删除小程序后再次进入T.T',
     showCancel: false,
     confirmText: '好'
   })
@@ -11,10 +11,10 @@ function getDeckAndType(callback) {
 
   let _decks = wx.getStorageSync('decks');
   if (_decks) {
-    console.log('请求到 decks');
+    console.log('读取到 decks');
     getTypes();
   } else {
-    console.log('未请求到 decks，现场请求 decks');
+    console.log('未读取到 decks，现场请求 decks');
     wx.showLoading({
       mask: true,
       title: '请求列表中…',
@@ -22,7 +22,7 @@ function getDeckAndType(callback) {
     wx.request({
       url: 'https://wxapp-1257102469.cos.ap-shanghai.myqcloud.com/decks.json',
       success: function(res) {
-        console.log('现成请求 decks 完成');
+        console.log('现场请求 decks 完成');
         wx.setStorage({
           key: "decks",
           data: res.data.series.data
@@ -40,10 +40,10 @@ function getDeckAndType(callback) {
   function getTypes() {
     let _types = wx.getStorageSync('types');
     if (_types) {
-      console.log('请求到 types');
+      console.log('读取到 types');
       callback(_decks, _types);
     } else {
-      console.log('未请求到 _types，现场请求 types');
+      console.log('未读取到 types，现场请求 types');
       wx.showLoading({
         mask: true,
         title: '请求卡组名中…',
@@ -51,7 +51,7 @@ function getDeckAndType(callback) {
       wx.request({
         url: 'https://wxapp-1257102469.cos.ap-shanghai.myqcloud.com/archetypes.json',
         success: function(res) {
-          console.log('现成请求 types 完成');
+          console.log('现场请求 types 完成');
           wx.setStorage({
             key: "types",
             data: res.data

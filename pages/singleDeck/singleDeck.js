@@ -31,7 +31,7 @@ Page({
           });
           that.setData({
             cardsData: res.data
-          })
+          });
           curOnLoad(options);
         },
         fail: function() {
@@ -79,20 +79,20 @@ Page({
       }
     }
 
-    function exeData(){
+    function exeData() {
       // 修改页面标题
       wx.setNavigationBarTitle({
         title: that.data.deckData.archetype
       });
       // 获取设备宽度
       wx.getSystemInfo({
-        success: function (res) {
+        success: function(res) {
           let width = res.windowWidth;
           that.setData({
             gWidth: width
-          })
+          });
         }
-      })
+      });
       let deckD = that.data.deckData,
         cardsD = that.data.cardsData;
       // 遍历卡牌，获取对象列表
@@ -281,7 +281,7 @@ Page({
       },
     ];
     const arrayMax = arr => Math.max(...arr);
-    costArr = [cost0, cost1, cost2, cost3, cost4, cost5, cost6, cost7]
+    costArr = [cost0, cost1, cost2, cost3, cost4, cost5, cost6, cost7];
     let costMax = arrayMax(costArr);
     let costData = {
       arr: costArr,
@@ -298,7 +298,7 @@ Page({
   },
 
   drawArc: function(canvasId, typeArg) {
-    let ctx = wx.createCanvasContext(canvasId)
+    let ctx = wx.createCanvasContext(canvasId);
     let width = this.data.gWidth,
       padding = 10,
       textPadding = 30;
@@ -354,7 +354,7 @@ Page({
   toHome: function() {
     wx.switchTab({
       url: '/pages/find/find',
-    })
+    });
   },
 
   onShareAppMessage: function(res) {
