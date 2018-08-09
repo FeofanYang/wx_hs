@@ -109,7 +109,8 @@ Page({
 
   onLoad: function() {
     let that = this;
-    wx.clearStorage();
+    // 每次加载都重新请求 decks
+    wx.removeStorageSync('decks');
     // 获取页面高度
     wx.getSystemInfo({
       success: function(res) {
@@ -201,7 +202,7 @@ Page({
     } else {
       _shortList.sort((a, b) => b.win_rate - a.win_rate);
     }
-    let items = 50;
+    let items = 25;
     let allIndex = Math.ceil(_shortList.length / items);
     let curIndex = this.data.oPages.curIndex;
     // 设置分页
