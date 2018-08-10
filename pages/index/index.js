@@ -25,15 +25,17 @@ Page({
       arena: null,
     },
     curWinrateList: null,
-    isWinrate: true
+    isWinrate: true,
+    oBtnShow: null,
   },
 
   onLoad: function() {
+
     let that = this;
     let day = new Date();
     wx.setNavigationBarTitle({
       title: '每日排行 ' + day.getFullYear() + '-' + (day.getMonth() + 1) + '-' + day.getDate(),
-    })
+    });
     wx.request({
       url: 'https://wxapp-1257102469.cos.ap-shanghai.myqcloud.com/winrate.json',
       success: function(res) {
@@ -44,16 +46,25 @@ Page({
         list['standard'] = that.filterCurList(2);
         list['wild'] = that.filterCurList(30);
         list['arena'] = that.filterCurList(3);
+        // 添加切换按钮动画
+        let btnShow = wx.createAnimation({
+          transformOrigin: "50% 50%",
+          duration: 1000,
+          timingFunction: "ease",
+          delay: 0
+        });
+        btnShow.right(0).step();
         that.setData({
           winrateRes: that.data.winrateRes,
           curWinrateList: that.data.winrateList['standard'],
-          winrateList: list
-        })
+          winrateList: list,
+          oBtnShow: btnShow.export()
+        });
       },
       fail: function() {
-        require('../../funtions.js').fnRequestFail()
+        require('../../funtions.js').fnRequestFail();
       }
-    })
+    });
   },
 
   chooseWinrate: function(e) {
@@ -61,14 +72,14 @@ Page({
     let winrateS = this.data.winrateStatus;
     let choose = e.currentTarget.dataset.choose;
     for (let obj in winrateS) {
-      winrateS[obj].status = false
+      winrateS[obj].status = false;
     }
     winrateS[choose].status = true;
     // 筛选正确的列表
     this.setData({
       curWinrateList: this.data.winrateList[choose],
       winrateStatus: winrateS
-    })
+    });
   },
 
   filterCurList: function(gt) {
@@ -126,13 +137,13 @@ Page({
     })
     let cur = this.data.curWinrateList[0].game_type;
     if (cur == 2) {
-      cur = 'standard'
+      cur = 'standard';
     }
     if (cur == 3) {
-      cur = 'arena'
+      cur = 'arena';
     }
     if (cur == 30) {
-      cur = 'wild'
+      cur = 'wild';
     }
     let list = this.data.winrateList;
     if (this.data.isWinrate) {
@@ -147,7 +158,7 @@ Page({
     this.setData({
       winrateList: list,
       curWinrateList: this.data.winrateList[cur],
-    })
+    });
   },
 
   toFindPage: function(e) {
@@ -159,4 +170,6 @@ Page({
       url: '../find/find'
     });
   },
+
+  onShareAppMessage: function(){},
 })
