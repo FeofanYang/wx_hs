@@ -21,18 +21,20 @@
         </view>
         <text class="cardCopy">{{item.copy}}</text>
       </view>
+    </view>
+    <view class="bottomView">
+      <button bindtap="copyCode">
+        <text class="iconfont icon-fuzhi"></text>
+        <text>复制</text>
+      </button>
+      <button open-type="share">
+        <text class="iconfont icon-fenxiang"></text>
+        <text>分享</text>
+      </button>
       <view class="deckDust">
         <image src="/images/icon_dust.png"></image>
         <text>{{deckData.dust}}</text>
       </view>
-    </view>
-    <view class="bottomView">
-      <button bindtap="copyCode">
-        <text class="iconfont icon-fuzhi"></text> 复制
-      </button>
-      <button open-type="share">
-        <text class="iconfont icon-fenxiang"></text> 分享
-      </button>
     </view>
   </view>
   <view class="deckInfo section">

@@ -40,7 +40,7 @@
     <view style="width:100%;height:80px;"></view>
   </scroll-view>
   <view class='pagination'>
-    <button bindtap='bindPagePrev' disabled='{{oPages.curIndex<=1}}'>上页</button>
+    <button bindtap='bindPagePrev' bindlongtap='bindPageFirst' disabled='{{oPages.curIndex<=1}}'>上页</button>
     <view>{{oPages.curIndex}}/{{oPages.allIndex}}</view>
     <button bindtap='bindPageNext' disabled='{{oPages.curIndex>=oPages.allIndex}}'>下页</button>
   </view>

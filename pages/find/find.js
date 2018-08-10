@@ -140,7 +140,7 @@ Page({
       this.setData({
         aMultiIndex: [0, arg.index, 0]
       });
-      this.pagination(this.data.oSList[arg.classes].decks, this.data.oPages.curIndex, true);
+      this.pagination(this.data.oSList[arg.classes].decks, 1, true);
       app.globalData.index2findArg = null;
     }
   },
@@ -227,6 +227,9 @@ Page({
       nScrollT: 0
     });
     wx.hideLoading();
+  },
+  bindPageFirst: function () {
+    this.pagination(this.data.oPages.allList, 1, this.data.bSortByGames);
   },
   bindPageNext: function() {
     this.pagination(this.data.oPages.allList, ++this.data.oPages.curIndex, this.data.bSortByGames);
