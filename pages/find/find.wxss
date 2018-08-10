@@ -13,17 +13,17 @@ page {
   box-shadow: 0 0 0, 0 3px 6px rgba(0, 0, 0, 0.25);
 }
 
-.thead picker {
-  width: 50%;
-  line-height: 50px;
+.thead .games {
+  width: 35%;
 }
 
 .thead .win_rate {
-  width: 20%;
+  width: 35%;
 }
 
-.thead .games {
+.thead picker {
   width: 30%;
+  line-height: 50px;
 }
 
 .thead .iconfont.true {
@@ -32,39 +32,12 @@ page {
 
 /* 卡组列表 */
 
-.card_deck {
+.deckList {
   position: relative;
+  padding: 30rpx 20rpx;
   display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  width: 100%;
-  padding: 30rpx 0;
-  border-bottom: 1px solid #000;
   overflow: hidden;
-}
-
-.card_deck .info {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  width: 50%;
-}
-
-.card_deck .win_rate {
-  width: 20%;
-  text-align: center;
-}
-
-.card_deck .games {
-  width: 30%;
-  text-align: center;
-}
-
-.card_deck .info image {
-  margin: 0 20rpx;
-  width: 80rpx;
-  height: 80rpx;
-  border-radius: 50%;
+  border-bottom: 1px solid #000;
 }
 
 .BGI, .BGI_mask {
@@ -75,12 +48,60 @@ page {
 .BGI {
   width: 600rpx;
   top: -50rpx;
+  left: -100rpx;
 }
 
 .BGI_mask {
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   background-image: linear-gradient(90deg, #fbf7f6 0, hsla(0, 0%, 100%, 0.8) 100px, #f9f9f9 256px);
+}
+
+.card_deck {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  width: 30%;
+}
+
+.card_deck .info, .card_deck .win_rate {
+  margin-bottom: 10rpx;
+}
+
+.card_deck .info {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.card_deck .info image {
+  flex-shrink: 0;
+  margin: 0 10rpx 0 0;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+}
+
+.preview {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: wrap;
+  width: 70%;
+}
+
+.previewImg {
+  margin: 2px;
+  width: 25px;
+  height: 25px;
+  background-size: auto 100%;
+  background-position: 75% 0;
+  border-radius: 50%;
+  border: 1px solid #000;
 }
 
 /* 分页器 */

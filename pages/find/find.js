@@ -1,8 +1,9 @@
 const app = getApp();
 Page({
   data: {
-    ResDecksList: null,
-    ResArchetypes: null,
+    ResCards: null,
+    ResDecks: null,
+    ResTypes: null,
     oSList: {
       all: {
         decks: [],
@@ -119,11 +120,12 @@ Page({
         });
       }
     });
-    let callback = function(_decks, _types) {
+    let callback = function(_cards, _decks, _types) {
       that.setData({
         bLoadIng: false,
-        ResDecksList: _decks,
-        ResArchetypes: _types
+        ResCards: _cards,
+        ResDecks: _decks,
+        ResTypes: _types
       });
       that.setList();
     }
@@ -144,8 +146,8 @@ Page({
   },
 
   setList: function() {
-    let decks = this.data.ResDecksList;
-    let types = this.data.ResArchetypes;
+    let decks = this.data.ResDecks;
+    let types = this.data.ResTypes;
     let oSList = this.data.oSList;
     for (let c in decks) {
       for (let d in decks[c]) {
@@ -176,6 +178,7 @@ Page({
     // 卡组名去重
     const unique = arr => [...new Set(arr)];
     for (let item in oSList) {
+      // 添加卡牌对象
       oSList[item].names = unique(oSList[item].names);
       oSList[item].names.unshift("全部原型");
       this.setData({
@@ -208,7 +211,9 @@ Page({
     // 设置分页
     let curList = [];
     for (let i = 0; i < _shortList.length; i++) {
+      delete _shortList[i]['cardsObj'];
       if (i >= items * (curIndex - 1) && i < items * curIndex) {
+        _shortList[i]['cardsObj'] = require('../../funtions.js').getCardsObj(_shortList[i], this.data.ResCards).cardsAllObj;
         curList.push(_shortList[i]);
         if (curList >= items) {
           break;
