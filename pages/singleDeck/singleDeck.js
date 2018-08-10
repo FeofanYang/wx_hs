@@ -8,78 +8,48 @@ Page({
   },
 
   onLoad: function(options) {
-
     let that = this;
-    wx.showLoading({
-      mask: true,
-      title: '读取卡组中…',
-    });
-    // 读取“卡牌”数据
-    const cards = wx.getStorageSync('cards');
-    if (cards) {
-      this.setData({
-        cardsData: cards
+    let callback = function(_cards, _decks, _types) {
+      that.setData({
+        cardsData: _cards,
       });
-      curOnLoad(options);
-    } else {
-      wx.request({
-        url: 'https://wxapp-1257102469.cos.ap-shanghai.myqcloud.com/cards.json',
-        success: function(res) {
-          wx.setStorage({
-            key: "cards",
-            data: res.data
-          });
-          that.setData({
-            cardsData: res.data
-          });
-          curOnLoad(options);
-        },
-        fail: function() {
-          require('../../funtions.js').fnRequestFail()
-        }
-      });
-    }
-
-    function curOnLoad(options) {
       // 从 find 页面进入 (读取到 find 传参)
       if (app.globalData.find2singleArg != null) {
         that.setData({
-          deckData: app.globalData.find2singleArg
+          deckData: app.globalData.find2singleArg,
         });
-        exeData();
+        processData();
       }
       // 从转发进入 (读取到分享链接参数)
       if (options.id) {
-        let callback = function(_decks, _types) {
-          let data = _decks,
-            types = _types;
-          // 分享参数遍历正确的卡组信息与卡组名
-          for (let c in data) {
-            for (let d in data[c]) {
-              if (data[c][d].deck_id == options.id) {
-                data[c][d]['classes'] = c.toLowerCase();
-                // 设置 classes 属性
-                let classes = data[c][d]['classes'];
-                // 添加中文卡组名
-                for (let t in types) {
-                  if (data[c][d]['archetype_id'] == t) {
-                    data[c][d]['archetype'] = types[t]
-                  }
+        let data = _decks,
+          types = _types;
+        // 分享参数遍历正确的卡组信息与卡组名
+        for (let c in data) {
+          for (let d in data[c]) {
+            if (data[c][d].deck_id == options.id) {
+              data[c][d]['classes'] = c.toLowerCase();
+              // 设置 classes 属性
+              let classes = data[c][d]['classes'];
+              // 添加中文卡组名
+              for (let t in types) {
+                if (data[c][d]['archetype_id'] == t) {
+                  data[c][d]['archetype'] = types[t]
                 }
-                that.setData({
-                  deckData: data[c][d]
-                });
-                break;
               }
+              that.setData({
+                deckData: data[c][d],
+              });
+              break;
             }
           }
-          exeData();
         }
-        require('../../funtions.js').getDeckAndType(callback);
+        processData();
       }
     }
+    require('../../funtions.js').getDeckAndType(callback);
 
-    function exeData() {
+    function processData() {
       // 修改页面标题
       wx.setNavigationBarTitle({
         title: that.data.deckData.archetype
@@ -96,9 +66,15 @@ Page({
       let deckD = that.data.deckData,
         cardsD = that.data.cardsData;
       // 遍历卡牌，获取对象列表
-      let cardsAllObj = that.getCardsObj(deckD, cardsD);
+      let cardsAllObj = require('../../funtions.js').getCardsObj(deckD, cardsD);
+      that.setData({
+        ['deckData.cardsNeutral']: cardsAllObj.cardsNeutralObj,
+        ['deckData.cardsClass']: cardsAllObj.cardsClassObj,
+        ['deckData.cardsNeutralCount']: cardsAllObj.cardsNeutralCount,
+        ['deckData.deck_list']: cardsAllObj.deck_list
+      });
       // 遍历卡组，获取分类数组
-      let checkDeckRes = that.checkDeck(cardsAllObj);
+      let checkDeckRes = that.checkDeck(cardsAllObj.cardsAllObj);
       let typeArg = checkDeckRes.typeArg;
       let rarityArg = checkDeckRes.rarityArg;
       // 修改数据
@@ -108,51 +84,8 @@ Page({
       // 绘制 canvas
       that.drawArc('typeCanvas', typeArg);
       // that.drawArc('rarityCanvas', rarityArg);
-      wx.hideLoading();
     }
 
-  },
-
-  getCardsObj: function(deck, cards) {
-    let cardsAllObj = [],
-      cardsNeutralObj = [],
-      cardsClassObj = [],
-      cardsNeutralCount = 0;
-    // 将json字符串转为二维数组
-    deck.deck_list = deck.deck_list.replace(/[\[|\]]/g, "");
-    deck.deck_list = deck.deck_list.split(',');
-    let aTempCards = [];
-    let aCurCards = [];
-    for (let i = 0; i < deck.deck_list.length; i++) {
-      if (i % 2 == 0) {
-        aTempCards = [];
-        aTempCards.push(parseInt(deck.deck_list[i]));
-        aTempCards.push(parseInt(deck.deck_list[i + 1]));
-        aCurCards.push(aTempCards);
-      }
-    }
-    this.setData({
-      ['deckData.deck_list']: aCurCards
-    })
-    for (let x in aCurCards) {
-      for (let y = 0; y < cards.length; y++) {
-        if (aCurCards[x][0] == cards[y].dbfId) {
-          cards[y].copy = aCurCards[x][1];
-          if (cards[y].cardClass == 'NEUTRAL') {
-            cardsNeutralObj.push(cards[y]);
-            cardsNeutralCount += parseInt(cards[y].copy);
-          } else {
-            cardsClassObj.push(cards[y]);
-          }
-          cardsAllObj.push(cards[y]);
-          break;
-        }
-      }
-    }
-    deck.cardsNeutral = cardsNeutralObj.sort((a, b) => a.cost - b.cost);
-    deck.cardsClass = cardsClassObj.sort((a, b) => a.cost - b.cost);
-    deck.cardsNeutralCount = cardsNeutralCount;
-    return cardsAllObj;
   },
 
   checkDeck: function(cards) {

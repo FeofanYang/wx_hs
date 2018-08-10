@@ -1,6 +1,6 @@
 <view class="container">
   <view class="section cardList">
-    <view class="classCardList">
+    <view wx:if="{{(30-deckData.cardsNeutralCount)>0}}" class="classCardList">
       <text class="listTitle">职业卡 ({{30 - deckData.cardsNeutralCount}})</text>
       <view class="card" wx:for="{{deckData.cardsClass}}">
         <text class="cardCost {{item.rarity}}">{{item.cost}}</text>
@@ -11,8 +11,8 @@
         <text class="cardCopy">{{item.copy}}</text>
       </view>
     </view>
-    <view class="neutralCardList">
-      <text class="listTitle">中立卡 ({{deckData.cardsNeutralCount}})</text>
+    <view wx:if="{{deckData.cardsNeutralCount>0}}" class="neutralCardList">
+      <text class="listTitle" style="float:right;">中立卡 ({{deckData.cardsNeutralCount}})</text>
       <view class="card" wx:for="{{deckData.cardsNeutral}}">
         <text class="cardCost {{item.rarity}}">{{item.cost}}</text>
         <view class="cardNameBg">
@@ -40,13 +40,13 @@
       <text class="sectionTitle">法力水晶分布图</text>
       <view class="cost">
         <view class="item" wx:for="{{deckData.cost.arr}}">
-          <text wx-if="{{item>0}}" class="count">{{item}}</text>
+          <text wx:if="{{item>0}}" class="count">{{item}}</text>
           <view class='col' style="height:{{item / (deckData.cost.max+8) * 100}}%"></view>
-          <view class="index" wx-if="{{index<7}}">
+          <view class="index" wx:if="{{index<7}}">
             <image src="/images/cost.png"></image>
             <text>{{index}}</text>
           </view>
-          <view class="index" wx-if="{{index>=7}}">
+          <view class="index" wx:if="{{index>=7}}">
             <image src="/images/cost.png"></image>
             <text>{{index}}+</text>
           </view>
