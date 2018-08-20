@@ -27,6 +27,13 @@ function getDeckAndType(callback) {
         url: 'https://wxapp-1257102469.cos.ap-shanghai.myqcloud.com/cards.json',
         success: function(res) {
           console.log('现场请求 cards 完成');
+          // 删除部分卡牌属性 节省资源
+          for (let i in res.data) {
+            delete res.data[i]['artist'];
+            delete res.data[i]['collectible'];
+            delete res.data[i]['flavor'];
+            delete res.data[i]['text'];
+          }
           wx.setStorage({
             key: "cards",
             data: res.data
@@ -56,11 +63,19 @@ function getDeckAndType(callback) {
         url: 'https://wxapp-1257102469.cos.ap-shanghai.myqcloud.com/decks.json',
         success: function(res) {
           console.log('现场请求 decks 完成');
+          let decks = res.data.series.data;
+          for (let c in decks) {
+            for (let d in decks[c]) {
+              if (parseInt(decks[c][d]['total_games']) < 1000) {
+                delete decks[c][d];
+              }
+            }
+          }
           wx.setStorage({
             key: "decks",
-            data: res.data.series.data
+            data: decks
           });
-          _decks = res.data.series.data;
+          _decks = decks;
           getTypes();
           wx.hideLoading();
         },
@@ -105,7 +120,8 @@ function getDeckAndType(callback) {
 }
 
 function getCardsObj(deck, cards) {
-  let cardsAllObj = [],
+  let cardsId = [],
+    cardsAllObj = [],
     cardsNeutralObj = [],
     cardsClassObj = [],
     cardsNeutralCount = 0;
@@ -135,15 +151,21 @@ function getCardsObj(deck, cards) {
           cardsClassObj.push(cards[y]);
         }
         cardsAllObj.push(cards[y]);
+        cardsId.push({
+          id: cards[y].id,
+          cost: cards[y].cost
+        });
         break;
       }
     }
   }
+  cardsId = cardsId.sort((a, b) => a.cost - b.cost);
   cardsNeutralObj = cardsNeutralObj.sort((a, b) => a.cost - b.cost);
   cardsClassObj = cardsClassObj.sort((a, b) => a.cost - b.cost);
   cardsNeutralCount = cardsNeutralCount;
   cardsAllObj = cardsAllObj.sort((a, b) => a.cost - b.cost);
   return {
+    cardsId: cardsId,
     cardsAllObj: cardsAllObj,
     deck_list: aCurCards,
     cardsNeutralObj: cardsNeutralObj,

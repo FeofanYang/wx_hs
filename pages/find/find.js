@@ -213,7 +213,7 @@ Page({
     for (let i = 0; i < _shortList.length; i++) {
       delete _shortList[i]['cardsObj'];
       if (i >= items * (curIndex - 1) && i < items * curIndex) {
-        _shortList[i]['cardsObj'] = require('../../funtions.js').getCardsObj(_shortList[i], this.data.ResCards).cardsAllObj;
+        _shortList[i]['cardsObj'] = require('../../funtions.js').getCardsObj(_shortList[i], this.data.ResCards).cardsId;
         curList.push(_shortList[i]);
         if (curList >= items) {
           break;
@@ -228,7 +228,7 @@ Page({
     });
     wx.hideLoading();
   },
-  bindPageFirst: function () {
+  bindPageFirst: function() {
     this.pagination(this.data.oPages.allList, 1, this.data.bSortByGames);
   },
   bindPageNext: function() {
