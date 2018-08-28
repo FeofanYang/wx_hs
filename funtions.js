@@ -64,12 +64,14 @@ function getDeckAndType(callback) {
         success: function(res) {
           console.log('现场请求 decks 完成');
           let decks = res.data.series.data;
+          const compact = (arr) => arr.filter(v => v);
           for (let c in decks) {
             for (let d in decks[c]) {
               if (parseInt(decks[c][d]['total_games']) < 1000) {
                 delete decks[c][d];
               }
             }
+            decks[c] = compact(decks[c]);
           }
           wx.setStorage({
             key: "decks",
