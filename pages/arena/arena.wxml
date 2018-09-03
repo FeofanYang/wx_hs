@@ -1,0 +1,22 @@
+<!-- 正确的筛选，setList，分页 -->
+<view class="thead">
+  <view class="theadCard">卡牌</view>
+  <view class="theadData">出现率</view>
+  <view class="theadData">张数</view>
+  <view class="theadData">胜率</view>
+</view>
+<scroll-view scroll-y scroll-top="{{nScrollT}}" scroll-with-animation="true" class='cardsUl' style='height:{{nScrollH}}px;' enable-back-to-top='true'>
+  <view class="cardsLi" wx:for="{{aCurList}}">
+    <view class="card">
+      <text class="cardCost {{item.rarity}}">{{item.cost}}</text>
+      <view class="cardNameBg">
+        <text class="cardName">{{item.name}}</text>
+        <image class="cardImg" src="https://art.hearthstonejson.com/v1/tiles/{{item.id}}.png"></image>
+      </view>
+    </view>
+    <text class="cardInfo">{{item.popularity}}%</text>
+    <text class="cardInfo">{{item.count}}</text>
+    <text class="cardInfo {{item.winrate>50?'high':'low'}}">{{item.winrate}}%</text>
+  </view>
+  <view style="width:100%;height:80px;"></view>
+</scroll-view>

@@ -116,7 +116,7 @@ Page({
     wx.getSystemInfo({
       success: function(res) {
         that.setData({
-          nScrollH: res.windowHeight - 60
+          nScrollH: res.windowHeight - 50
         });
       }
     });
@@ -162,9 +162,10 @@ Page({
         // 对局数量后两位取整
         decks[c][d]['total_games'] = Math.round(decks[c][d]['total_games'] / 100) * 100;
         // 添加中文卡组名
+        decks[c][d]['archetype'] = '未命名卡组';
         for (let t in types) {
           if (decks[c][d]['archetype_id'] == t) {
-            decks[c][d]['archetype'] = types[t]
+            decks[c][d]['archetype'] = types[t];
           }
         }
         // 分职业添加对象

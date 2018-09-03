@@ -2,7 +2,8 @@
   "pages": [
     "pages/index/index",
     "pages/find/find",
-    "pages/singleDeck/singleDeck"
+    "pages/singleDeck/singleDeck",
+    "pages/arena/arena"
   ],
   "window": {
     "backgroundTextStyle": "light",
@@ -22,6 +23,12 @@
       {
         "pagePath": "pages/find/find",
         "text": "卡组查询",
+        "iconPath": "/images/tabbar/icon_search.png",
+        "selectedIconPath": "/images/tabbar/icon_searchA.png"
+      },
+      {
+        "pagePath": "pages/arena/arena",
+        "text": "竞技场",
         "iconPath": "/images/tabbar/icon_search.png",
         "selectedIconPath": "/images/tabbar/icon_searchA.png"
       }

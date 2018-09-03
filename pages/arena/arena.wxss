@@ -1,0 +1,117 @@
+page {
+  height: 100%;
+  overflow: hidden;
+}
+
+.thead {
+  display: flex;
+  width: 100%;
+  height: 50px;
+  align-items: center;
+  text-align: center;
+  background-color: #f9f9f9;
+  box-shadow: 0 0 0, 0 3px 6px rgba(0, 0, 0, 0.25);
+}
+
+.theadCard {
+  width: 40%;
+  text-align: center;
+}
+
+.theadData {
+  width: 20%;
+  text-align: center;
+}
+
+/* 卡牌展示 */
+
+.cardsLi {
+  display: flex;
+  align-items: center;
+}
+
+.cardsLi:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.cardInfo {
+  width: 20%;
+  text-align: center;
+}
+
+.cardsLi .high {
+  color: green;
+}
+
+.cardsLi .low {
+  color: red;
+}
+
+.card {
+  position: relative;
+  display: flex;
+  border: 1px solid #000;
+  width: 40%;
+  height: 60rpx;
+  margin-bottom: 2rpx;
+}
+
+.card > text {
+  line-height: 60rpx;
+  text-shadow: -1px -1px 1px #000, 1px -1px 1px #000, -1px 1px 1px #000, 1px 1px 1px #000;
+}
+
+.cardCost {
+  flex: 0 0 60rpx;
+  width: 60rpx;
+  height: 60rpx;
+  text-align: center;
+  border-right: 1px solid #000;
+  color: #fff;
+}
+
+.FREE, .COMMON {
+  background-color: #858585;
+}
+
+.RARE {
+  background-color: #315376;
+}
+
+.EPIC {
+  background-color: #644c82;
+}
+
+.LEGENDARY {
+  background-color: #855c25;
+}
+
+.cardNameBg {
+  position: relative;
+  flex: 1 0 auto;
+}
+
+.cardName {
+  position: absolute;
+  padding-left: 10rpx;
+  width: 100%;
+  height: 100%;
+  line-height: 60rpx;
+  text-align: left;
+  font-size: 24rpx;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  color: #fff;
+  text-shadow: -1px -1px 1px #000, 1px -1px 1px #000, -1px 1px 1px #000, 1px 1px 1px #000;
+  background: linear-gradient(65deg, #313109, #313131 calc(100% - 120rpx), rgba(49, 49, 49, 0) calc(100% - 60rpx), rgba(49, 49, 49, 0));
+  z-index: 2;
+}
+
+.cardImg {
+  position: absolute;
+  right: 0;
+  width: 230rpx;
+  height: 60rpx;
+  z-index: 1;
+}
