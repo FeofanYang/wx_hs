@@ -1,10 +1,25 @@
 Page({
 
   data: {
+    // 滚动区相关
     nScrollT: 0,
     nScrollH: 0,
+    // 基础
     oCards: null,
     oArena: null,
+    oLoadStatus: {
+      ALL: false,
+      DRUID: false,
+      HUNTER: false,
+      MAGE: false,
+      PALADIN: false,
+      PRIEST: false,
+      ROGUE: false,
+      SHAMAN: false,
+      WARLOCK: false,
+      WARRIOR: false,
+    },
+    // 分页
     oPages: {
       allList: null,
       curList: null,
@@ -12,17 +27,71 @@ Page({
       curIndex: 1,
       sort: false
     },
+    // 弹窗
+    bModuleOpen: false,
+    oPageShow: null,
+    oPageHide: null,
+    nFilterP: -500,
+    oFilterSet: {
+      classesMenu: [{
+          name: '小德',
+          key: 'DRUID',
+          status: false
+        },
+        {
+          name: '猎人',
+          key: 'HUNTER',
+          status: false
+        },
+        {
+          name: '法师',
+          key: 'MAGE',
+          status: false
+        },
+        {
+          name: '骑士',
+          key: 'PALADIN',
+          status: false
+        },
+        {
+          name: '牧师',
+          key: 'PRIEST',
+          status: false
+        },
+        {
+          name: '盗贼',
+          key: 'ROGUE',
+          status: false
+        },
+        {
+          name: '萨满',
+          key: 'SHAMAN',
+          status: false
+        },
+        {
+          name: '术士',
+          key: 'WARLOCK',
+          status: false
+        },
+        {
+          name: '战士',
+          key: 'WARRIOR',
+          status: false
+        },
+      ]
+    }
   },
 
   onLoad: function(options) {
     let that = this;
     // 每次加载都重新请求 arena
-    wx.removeStorageSync('arena');
+    // wx.removeStorageSync('arena');
     // 获取页面高度
     wx.getSystemInfo({
       success: function(res) {
         that.setData({
-          nScrollH: res.windowHeight - 50 - 80
+          nScrollH: res.windowHeight - 50,
+          nFilterP: -res.windowWidth
         });
       }
     });
@@ -114,43 +183,50 @@ Page({
   },
 
   setList: function(classes) {
+    wx.showLoading({
+      mask: true,
+      title: '加载列表中…',
+    });
 
     let arena = this.data.oArena;
     let cards = this.data.oCards;
 
-    // 添加属性
-    const compact = (arr) => arr.filter(v => v);
-    for (let a in arena[classes]) {
-      arena[classes][a].popularity = arena[classes][a].popularity.toFixed(1);
-      arena[classes][a].count = arena[classes][a].count.toFixed(1);
-      arena[classes][a].winrate = arena[classes][a].winrate.toFixed(1);
-      if (arena[classes][a].popularity < 1) {
-        delete arena[classes][a];
-      } else {
-        for (let i = 0; i < cards.length; i++) {
-          if (arena[classes][a].dbf_id == cards[i].dbfId) {
-            arena[classes][a].id = cards[i].id;
-            arena[classes][a].name = cards[i].name;
-            arena[classes][a].cost = cards[i].cost;
-            arena[classes][a].rarity = cards[i].rarity;
-            break;
+    // 判断加载状态 → 添加属性
+    if (!this.data.oLoadStatus[classes]) {
+      const compact = (arr) => arr.filter(v => v);
+      for (let a in arena[classes]) {
+        arena[classes][a].popularity = arena[classes][a].popularity.toFixed(2);
+        arena[classes][a].count = arena[classes][a].count.toFixed(1);
+        arena[classes][a].winrate = arena[classes][a].winrate.toFixed(1);
+        if (arena[classes][a].popularity < 0.02) {
+          delete arena[classes][a];
+        } else {
+          for (let i = 0; i < cards.length; i++) {
+            if (arena[classes][a].dbf_id == cards[i].dbfId) {
+              arena[classes][a].id = cards[i].id;
+              arena[classes][a].name = cards[i].name;
+              arena[classes][a].cost = cards[i].cost;
+              arena[classes][a].rarity = cards[i].rarity;
+              break;
+            }
           }
         }
       }
+      arena[classes] = compact(arena[classes]);
+      this.setData({
+        ['oArena.' + classes]: arena[classes],
+        ['oLoadStatus.' + classes]: true,
+      });
     }
-    arena[classes] = compact(arena[classes]);
-    this.setData({
-      ['oArena.' + classes]: arena[classes],
-    });
     this.pagination(arena[classes], 1, this.data.oPages.sort);
-
+    wx.hideLoading();
   },
 
   pagination: function(_shortList, _resetIndex, _sort) {
     wx.showLoading({
       mask: true,
       title: '加载列表中…',
-    })
+    });
     this.setData({
       ['oPages.curIndex']: _resetIndex
     })
@@ -163,7 +239,7 @@ Page({
     } else {
       _shortList.sort((a, b) => b.popularity - a.popularity);
     }
-    let items = 25;
+    let items = 50;
     let allIndex = Math.ceil(_shortList.length / items);
     let curIndex = this.data.oPages.curIndex;
     // 设置分页
@@ -206,6 +282,77 @@ Page({
   },
   sortByW: function() {
     this.pagination(this.data.oPages.allList, 1, 'w');
-  }
+  },
+
+  moduleOpen: function() {
+    // 添加切换按钮动画
+    let pageShow = wx.createAnimation({
+      transformOrigin: "50% 50%",
+      duration: 500,
+      timingFunction: "ease",
+      delay: 0
+    });
+    pageShow.right(0).step();
+    this.setData({
+      bModuleOpen: true,
+      oPageShow: pageShow.export()
+    });
+  },
+  moduleClose: function() {
+    let that = this;
+    // 添加切换按钮动画
+    let pageShow = wx.createAnimation({
+      transformOrigin: "50% 50%",
+      duration: 200,
+      timingFunction: "ease",
+      delay: 0
+    });
+    pageShow.right(that.data.nFilterP).step();
+    this.setData({
+      oPageShow: pageShow.export()
+    });
+    setTimeout(function() {
+      that.setData({
+        bModuleOpen: false
+      });
+    }, 100);
+  },
+
+  filterClasses: function(e) {
+    let choose = e.currentTarget.dataset.classes;
+    let menu = this.data.oFilterSet.classesMenu;
+    let res;
+    for (let i in menu) {
+      if (menu[i].key == choose) {
+        menu[i].status = !menu[i].status;
+      } else {
+        menu[i].status = false;
+      }
+    }
+    for (let i in menu) {
+      if (menu[i].status == true) {
+        res = menu[i].key;
+      }
+    }
+    this.setData({
+      ['oFilterSet.classesMenu']: menu
+    })
+    if (res) {
+      this.setList(res);
+    } else {
+      this.pagination(this.data.oArena.ALL, 1, this.data.oPages.sort);
+    }
+  },
+
+  resetFilter: function() {
+    let menu = this.data.oFilterSet.classesMenu;
+    for (let i in menu) {
+      menu[i].status = false;
+    }
+    this.setData({
+      ['oFilterSet.classesMenu']: menu
+    });
+    this.pagination(this.data.oArena.ALL, 1, this.data.oPages.sort);
+  },
 
 })

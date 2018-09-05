@@ -1,8 +1,20 @@
 <view class="thead">
-  <view class="theadCard" bindtap='sortByCost'>卡牌<text class="iconfont {{oPages.sort=='cost'?'icon-xiangxia1':'icon-sort'}} {{oPages.sort=='cost'}}"></text></view>
-  <view class="theadData" bindtap='sortByP'>出现率<text class="iconfont {{!oPages.sort?'icon-xiangxia1':'icon-sort'}} {{!oPages.sort}}"></text></view>
-  <view class="theadData" bindtap='sortByC'>张数<text class="iconfont {{oPages.sort=='c'?'icon-xiangxia1':'icon-sort'}} {{oPages.sort=='c'}}"></text></view>
-  <view class="theadData" bindtap='sortByW'>胜率<text class="iconfont {{oPages.sort=='w'?'icon-xiangxia1':'icon-sort'}} {{oPages.sort=='w'}}"></text></view>
+  <view class="theadCard text-{{oPages.sort=='cost'}}" bindtap='sortByCost'>
+    <text>卡牌</text>
+    <text class="iconfont {{oPages.sort=='cost'?'icon-down':'icon-sort'}}"></text>
+  </view>
+  <view class="theadData text-{{!oPages.sort}}" bindtap='sortByP'>
+    <text>出现率</text>
+    <text class="iconfont {{!oPages.sort?'icon-down':'icon-sort'}}"></text>
+  </view>
+  <view class="theadData text-{{oPages.sort=='c'}}" bindtap='sortByC'>
+    <text>张数</text>
+    <text class="iconfont {{oPages.sort=='c'?'icon-down':'icon-sort'}}"></text>
+  </view>
+  <view class="theadData text-{{oPages.sort=='w'}}" bindtap='sortByW'>
+    <text>胜率</text>
+    <text class="iconfont {{oPages.sort=='w'?'icon-down':'icon-sort'}}"></text>
+  </view>
 </view>
 <scroll-view scroll-y scroll-top="{{nScrollT}}" scroll-with-animation="true" class='cardsUl' style='height:{{nScrollH}}px;' enable-back-to-top='true'>
   <view class="cardsLi" wx:for="{{oPages.curList}}">
@@ -10,17 +22,36 @@
       <text class="cardCost {{item.rarity}}">{{item.cost}}</text>
       <view class="cardNameBg">
         <text class="cardName">{{item.name}}</text>
-        <image class="cardImg" src="https://art.hearthstonejson.com/v1/tiles/{{item.id}}.png"></image>
+        <!-- <image class="cardImg" src="https://art.hearthstonejson.com/v1/tiles/{{item.id}}.png"></image> -->
+        <view class='cardImg' style="background-image:url(https://art.hearthstonejson.com/v1/tiles/{{item.id}}.png)"></view>
       </view>
     </view>
     <text class="cardInfo">{{item.popularity}}%</text>
     <text class="cardInfo">{{item.count}}</text>
     <text class="cardInfo {{item.winrate>50?'high':'low'}}">{{item.winrate}}%</text>
   </view>
+  <view style="width:100%;height:80px;"></view>
 </scroll-view>
 <view class='pagination'>
   <button bindtap='bindPagePrev' bindlongtap='bindPageFirst' disabled='{{oPages.curIndex<=1}}'>上页</button>
   <view>{{oPages.curIndex}}/{{oPages.allIndex}}</view>
   <button bindtap='bindPageNext' disabled='{{oPages.curIndex>=oPages.allIndex}}'>下页</button>
-  <button bindtap='filter' class='filter'><text class='iconfont icon-shaixuan'></text></button>
+  <button bindtap='moduleOpen' class='filterBtn'>
+    <text class='iconfont icon-filter'></text>
+  </button>
+</view>
+<view class='filterMask' wx:if="{{bModuleOpen}}" bindtap='moduleClose'>
+</view>
+<view class='filterView' animation="{{oPageShow}}" style="right:{{nFilterP}}px">
+  <view class='filterTitle'>筛选</view>
+  <view class='filterSection'>
+    <text class='title'>职业</text>
+    <view class='filterSelects'>
+      <view wx:for="{{oFilterSet.classesMenu}}" data-classes='{{item.key}}' bindtap='filterClasses' class='{{item.status}}'>{{item.name}}</view>
+    </view>
+  </view>
+  <view class='filterBtns'>
+    <view bindtap='resetFilter' class='reset'>重置</view>
+    <view bindtap='moduleClose' class='filter'>确定</view>
+  </view>
 </view>

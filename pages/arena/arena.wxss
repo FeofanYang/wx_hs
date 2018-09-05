@@ -9,8 +9,12 @@ page {
   height: 50px;
   align-items: center;
   text-align: center;
-  background-color: #f9f9f9;
+  background-color: #1d3657;
   box-shadow: 0 0 0, 0 3px 6px rgba(0, 0, 0, 0.25);
+}
+
+.thead text {
+  color: #51657f;
 }
 
 .theadCard {
@@ -89,6 +93,7 @@ page {
 .cardNameBg {
   position: relative;
   flex: 1 0 auto;
+  overflow: hidden;
 }
 
 .cardName {
@@ -111,7 +116,90 @@ page {
 .cardImg {
   position: absolute;
   right: 0;
-  width: 230rpx;
-  height: 60rpx;
-  z-index: 1;
+  width: 100%;
+  height: 100%;
+  background-size: 100% 100%;
+}
+
+/* 弹窗 */
+
+.filterMask {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 10;
+}
+
+.filterView {
+  position: absolute;
+  width: 75%;
+  height: 100%;
+  top: 0;
+  background-color: #fff;
+  z-index: 11;
+}
+
+.filterTitle {
+  padding: 10rpx 40rpx;
+  color: #666;
+  background-color: #f9f9f9;
+}
+
+.filterSection {
+  padding: 20rpx;
+  border-bottom: 1px solid #f9f9f9;
+}
+
+.filterSection .title {
+  display: block;
+  margin-bottom: 20rpx;
+}
+
+.filterSelects {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.filterSelects>view {
+  margin-bottom: 10rpx;
+  width: 32%;
+  height: 80rpx;
+  text-align: center;
+  line-height: 80rpx;
+  background-color: #f9f9f9;
+  border-radius: 5rpx;
+}
+
+.filterSelects>view.true {
+  color: #1d3657;
+  background-color: rgba(29, 54, 87, 0.5);
+}
+
+.filterBtns {
+  display: flex;
+  justify-content: space-between;
+  position: absolute;
+  right: 10px;
+  bottom: 20px;
+  height: 40px;
+  width: 60%;
+}
+
+.filterBtns view {
+  width: 49%;
+  height: 100%;
+  text-align: center;
+  line-height: 40px;
+  color: #fff;
+}
+.reset{
+  border-radius: 40px 0 0 40px;
+  background: linear-gradient(to right, #A1CAFF, #688ab6);
+}
+.filter{
+  border-radius: 0 40px 40px 0;
+  background: linear-gradient(to right, #5878a2, #1d3657);
 }
