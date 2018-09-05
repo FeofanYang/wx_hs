@@ -7,12 +7,12 @@
   ],
   "window": {
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#fff",
+    "navigationBarBackgroundColor": "#1d3657",
     "navigationBarTitleText": "炉石卡组",
-    "navigationBarTextStyle": "black"
+    "navigationBarTextStyle": "white"
   },
   "tabBar": {
-    "selectedColor": "#09bb07",
+    "selectedColor": "#1d3657",
     "list": [
       {
         "pagePath": "pages/index/index",

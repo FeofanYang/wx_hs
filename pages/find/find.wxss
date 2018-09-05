@@ -10,20 +10,13 @@ page {
   height: 50px;
   align-items: center;
   text-align: center;
+  background-color: #1d3657;
   box-shadow: 0 0 0, 0 3px 6px rgba(0, 0, 0, 0.25);
 }
 
-.thead .games {
-  width: 35%;
-}
-
-.thead .win_rate {
-  width: 35%;
-}
-
-.thead picker {
-  width: 30%;
-  line-height: 50px;
+.thead .games, .thead .win_rate {
+  width: 50%;
+  color: #51657f;
 }
 
 /* 卡组列表 */
@@ -100,8 +93,6 @@ page {
   border: 1px solid #000;
 }
 
-
-
 /* 空白提示 */
 
 .empty {
@@ -117,4 +108,23 @@ page {
 
 .empty button {
   width: 90%;
+}
+
+picker {
+  width: 80rpx;
+  position: relative;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 14px;
+  padding-right: 14px;
+  box-sizing: border-box;
+  font-size: 18px;
+  text-align: center;
+  text-decoration: none;
+  line-height: 2.55555556;
+  border-radius: 5px;
+  -webkit-tap-highlight-color: transparent;
+  overflow: hidden;
+  color: #000;
 }

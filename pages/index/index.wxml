@@ -2,13 +2,6 @@
 
   <view class='banner'>
     <image mode='aspectFill' src="https://wxapp-1257102469.cos.ap-shanghai.myqcloud.com/images/banner.jpg"></image>
-    <view class='mask'></view>
-    <view class='tabbar'>
-      <view wx:for='{{winrateStatus}}' bindtap='chooseWinrate' data-choose='{{index}}' class='{{item.status}}'>
-        <image src='{{item.BGI}}'></image>
-        <text>{{item.name}}</text>
-      </view>
-    </view>
     <view bindtap='toggle' class='toggleBtn' animation="{{oBtnShow}}">
       <text class='iconfont icon-swap'></text> {{isWinrate?'胜率':'热度'}}
     </view>
@@ -19,6 +12,12 @@
 
   <view class='winrate'>
     <view class='header'>
+    <view class='tabbar'>
+      <view wx:for='{{winrateStatus}}' bindtap='chooseWinrate' data-choose='{{index}}' class='{{item.status}}'>
+        <text class='iconfont {{item.BGI}}' style='margin-right:10rpx;'></text>
+        <text>{{item.name}}</text>
+      </view>
+    </view>
     </view>
     <view class='preview'>
       <view wx:for='{{curWinrateList}}' bindtap='toFindPage' data-index='{{item.index}}' data-classes='{{item.classesEN}}' class='preview-item'>

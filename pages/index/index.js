@@ -5,17 +5,17 @@ Page({
       standard: {
         name: '标准',
         status: true,
-        BGI: '/images/standard.png'
+        BGI: 'icon-standard_icon'
       },
       wild: {
         name: '狂野',
         status: false,
-        BGI: '/images/wild.png'
+        BGI: 'icon-wild_icon'
       },
       arena: {
         name: '竞技场',
         status: false,
-        BGI: '/images/arena.png'
+        BGI: 'icon-arena_icon'
       },
     },
     winrateRes: null,

@@ -24,11 +24,11 @@
     </view>
     <view class="bottomView">
       <button bindtap="copyCode">
-        <text class="iconfont icon-fuzhi"></text>
+        <text class="iconfont icon-copy1"></text>
         <text>复制</text>
       </button>
       <button open-type="share">
-        <text class="iconfont icon-fenxiang"></text>
+        <text class="iconfont icon-share"></text>
         <text>分享</text>
       </button>
       <view class="deckDust">

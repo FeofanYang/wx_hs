@@ -1,20 +1,14 @@
 <view wx:if='{{bLoadIng}}'></view>
 <view wx:else>
   <view class='thead'>
-    <view bindtap='sortBtn' data-filter='total_games' class='games'>
+    <view bindtap='sortBtn' data-filter='total_games' class='games text-{{bSortByGames}}'>
       <text>对局优先</text>
-      <text class="iconfont {{bSortByGames?'icon-xiangxia1':'icon-sort'}} {{bSortByGames}}"></text>
+      <text class="iconfont {{bSortByGames?'icon-down':'icon-sort'}}"></text>
     </view>
-    <view bindtap='sortBtn' data-filter='win_rate' class='win_rate'>
+    <view bindtap='sortBtn' data-filter='win_rate' class='win_rate text-{{!bSortByGames}}'>
       <text>胜率优先</text>
-      <text class="iconfont {{bSortByGames?'icon-sort':'icon-xiangxia1'}} {{!bSortByGames}}"></text>
+      <text class="iconfont {{bSortByGames?'icon-sort':'icon-down'}}"></text>
     </view>
-    <picker mode='multiSelector' bindchange='bindMultiPickerChange' bindcolumnchange='bindMultiPickerColumnChange' value='{{aMultiIndex}}' range='{{aMultiList}}'>
-      <view class='picker'>
-        <text>筛选</text>
-        <text class='iconfont icon-shaixuan'></text>
-      </view>
-    </picker>
   </view>
   <view wx:if='{{bEmptyList}}' class='empty' style='height:{{nScrollH}}px;'>
     <icon type='info' size='70' />
@@ -59,5 +53,7 @@
     <button bindtap='bindPagePrev' bindlongtap='bindPageFirst' disabled='{{oPages.curIndex<=1}}'>上页</button>
     <view>{{oPages.curIndex}}/{{oPages.allIndex}}</view>
     <button bindtap='bindPageNext' disabled='{{oPages.curIndex>=oPages.allIndex}}'>下页</button>
+    <picker mode='multiSelector' bindchange='bindMultiPickerChange' bindcolumnchange='bindMultiPickerColumnChange' value='{{aMultiIndex}}' range='{{aMultiList}}' class='filterBtn'><text class='iconfont icon-filter'></text>
+    </picker>
   </view>
 </view>
