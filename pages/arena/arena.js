@@ -198,7 +198,7 @@ Page({
         arena[classes][a].popularity = arena[classes][a].popularity.toFixed(2);
         arena[classes][a].count = arena[classes][a].count.toFixed(1);
         arena[classes][a].winrate = arena[classes][a].winrate.toFixed(1);
-        if (arena[classes][a].popularity < 0.02) {
+        if (arena[classes][a].popularity < 0.05) {
           delete arena[classes][a];
         } else {
           for (let i = 0; i < cards.length; i++) {
