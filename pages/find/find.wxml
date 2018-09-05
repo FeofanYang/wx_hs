@@ -22,7 +22,23 @@
     <button bindtap='resetPicker'>重置筛选</button>
   </view>
   <scroll-view wx:else scroll-y scroll-top="{{nScrollT}}" scroll-with-animation="true" class='deckRl' style='height:{{nScrollH}}px;' enable-back-to-top='true'>
-    <view wx:for='{{oPages.curList}}' data-index='{{index}}' bindtap='toSinglePage' class='deckList'>
+    <view wx:if='{{index<=5}}' wx:for='{{oPages.curList}}' data-index='{{index}}' bindtap='toSinglePage' class='deckList'>
+      <image class='BGI' src='https://wxapp-1257102469.cos.ap-shanghai.myqcloud.com/images/heros/{{item.classes}}.jpg'></image>
+      <view class='BGI_mask'></view>
+      <view class='card_deck'>
+        <view class='info'>
+          <image src='https://wxapp-1257102469.cos.ap-shanghai.myqcloud.com/images/heros/icon_{{item.classes}}.jpg'></image>
+          <text>{{item.archetype}}</text>
+        </view>
+        <text class='win_rate'>胜率：{{item.win_rate}}%</text>
+        <text class='games'>对局：{{item.total_games}}</text>
+      </view>
+      <view class="preview">
+          <view wx:for="{{item.cardsObj}}" wx:for-item="card" class="previewImg" style="background-image:url(https://art.hearthstonejson.com/v1/tiles/{{card.id}}.png)"></view>
+      </view>
+    </view>
+    <ad unit-id="adunit-d5a1772a55f34d13"></ad>
+    <view wx:if='{{index>5}}' wx:for='{{oPages.curList}}' data-index='{{index}}' bindtap='toSinglePage' class='deckList'>
       <image class='BGI' src='https://wxapp-1257102469.cos.ap-shanghai.myqcloud.com/images/heros/{{item.classes}}.jpg'></image>
       <view class='BGI_mask'></view>
       <view class='card_deck'>
