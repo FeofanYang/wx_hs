@@ -44,17 +44,6 @@ page {
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15), 0 3px 6px rgba(0, 0, 0, 0.25);
 }
 
-.clearBtn{
-  position: absolute;
-  padding: 10rpx 20rpx;
-  left: 20rpx;
-  top: 10%;
-  border-radius: 50%;
-  color: #fff;
-  background-color: #1d3657;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15), 0 3px 6px rgba(0, 0, 0, 0.25);
-}
-
 .tabbar {
   display: flex;
   flex-direction: row;

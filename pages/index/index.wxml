@@ -5,9 +5,6 @@
     <view bindtap='toggle' class='toggleBtn' animation="{{oBtnShow}}">
       <text class='iconfont icon-swap'></text> {{isWinrate?'胜率':'热度'}}
     </view>
-    <view bindtap='clearStorage' class='clearBtn'>
-      ？
-    </view>
   </view>
 
   <view class='winrate'>
