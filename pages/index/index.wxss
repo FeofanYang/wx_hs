@@ -36,9 +36,9 @@ page {
 .toggleBtn {
   position: absolute;
   padding: 10rpx 20rpx;
-  right: -80px;
+  right: 0;
   top: 10%;
-  border-radius: 20rpx 0 0 20rpx;
+  border-radius: 20rpx;
   color: #fff;
   background-color: #1d3657;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15), 0 3px 6px rgba(0, 0, 0, 0.25);

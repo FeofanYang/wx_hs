@@ -2,7 +2,7 @@
 
   <view class='banner'>
     <image mode='aspectFill' src="https://wxapp-1257102469.cos.ap-shanghai.myqcloud.com/images/banner.jpg"></image>
-    <view bindtap='toggle' class='toggleBtn' animation="{{oBtnShow}}">
+    <view bindtap='toggle' class='toggleBtn'>
       <text class='iconfont icon-swap'></text> {{isWinrate?'胜率':'热度'}}
     </view>
   </view>

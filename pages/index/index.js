@@ -26,7 +26,6 @@ Page({
     },
     curWinrateList: null,
     isWinrate: true,
-    oBtnShow: null,
   },
 
   onLoad: function() {
@@ -46,19 +45,10 @@ Page({
         list['standard'] = that.filterCurList(2);
         list['wild'] = that.filterCurList(30);
         list['arena'] = that.filterCurList(3);
-        // 添加切换按钮动画
-        let btnShow = wx.createAnimation({
-          transformOrigin: "50% 50%",
-          duration: 1000,
-          timingFunction: "ease",
-          delay: 0
-        });
-        btnShow.right(0).step();
         that.setData({
           winrateRes: that.data.winrateRes,
           curWinrateList: that.data.winrateList['standard'],
           winrateList: list,
-          oBtnShow: btnShow.export()
         });
       },
       fail: function() {
