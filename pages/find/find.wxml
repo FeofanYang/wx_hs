@@ -28,7 +28,7 @@
         <text class='games'>对局：{{item.total_games}}</text>
       </view>
       <view class="preview">
-          <view wx:for="{{item.cardsObj}}" wx:for-item="card" class="previewImg" style="background-image:url(https://art.hearthstonejson.com/v1/tiles/{{card.id}}.png)"></view>
+        <view wx:for="{{item.cardsObj}}" wx:for-item="card" class="previewImg" style="background-image:url(https://art.hearthstonejson.com/v1/tiles/{{card.id}}.png)"></view>
       </view>
     </view>
     <ad unit-id="adunit-d5a1772a55f34d13"></ad>
@@ -44,7 +44,7 @@
         <text class='games'>对局：{{item.total_games}}</text>
       </view>
       <view class="preview">
-          <view wx:for="{{item.cardsObj}}" wx:for-item="card" class="previewImg" style="background-image:url(https://art.hearthstonejson.com/v1/tiles/{{card.id}}.png)"></view>
+        <view wx:for="{{item.cardsObj}}" wx:for-item="card" class="previewImg" style="background-image:url(https://art.hearthstonejson.com/v1/tiles/{{card.id}}.png)"></view>
       </view>
     </view>
     <view style="width:100%;height:80px;"></view>
@@ -53,7 +53,11 @@
     <button bindtap='bindPagePrev' bindlongtap='bindPageFirst' disabled='{{oPages.curIndex<=1}}'>上页</button>
     <view>{{oPages.curIndex}}/{{oPages.allIndex}}</view>
     <button bindtap='bindPageNext' disabled='{{oPages.curIndex>=oPages.allIndex}}'>下页</button>
-    <picker mode='multiSelector' bindchange='bindMultiPickerChange' bindcolumnchange='bindMultiPickerColumnChange' value='{{aMultiIndex}}' range='{{aMultiList}}' class='filterBtn'><text class='iconfont icon-filter'></text>
+    <button bindtap='clear' class='iconBox'>
+      <text class='iconfont icon-reload'></text>
+    </button>
+    <picker mode='multiSelector' bindchange='bindMultiPickerChange' bindcolumnchange='bindMultiPickerColumnChange' value='{{aMultiIndex}}' range='{{aMultiList}}' class='iconBox'>
+      <text class='iconfont icon-filter'></text>
     </picker>
   </view>
 </view>

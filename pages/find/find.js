@@ -110,8 +110,6 @@ Page({
 
   onLoad: function() {
     let that = this;
-    // 每次加载都重新请求 decks
-    wx.removeStorageSync('decks');
     // 获取页面高度
     wx.getSystemInfo({
       success: function(res) {
@@ -425,5 +423,9 @@ Page({
     wx.navigateTo({
       url: '../singleDeck/singleDeck'
     });
+  },
+
+  clear: function() {
+    require('../../funtions.js').clearStorage('/pages/find/find', 'decks');
   },
 })

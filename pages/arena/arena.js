@@ -32,60 +32,56 @@ Page({
     oPageShow: null,
     oPageHide: null,
     nFilterP: -500,
-    oFilterSet: {
-      classesMenu: [{
-          name: '小德',
-          key: 'DRUID',
-          status: false
-        },
-        {
-          name: '猎人',
-          key: 'HUNTER',
-          status: false
-        },
-        {
-          name: '法师',
-          key: 'MAGE',
-          status: false
-        },
-        {
-          name: '骑士',
-          key: 'PALADIN',
-          status: false
-        },
-        {
-          name: '牧师',
-          key: 'PRIEST',
-          status: false
-        },
-        {
-          name: '盗贼',
-          key: 'ROGUE',
-          status: false
-        },
-        {
-          name: '萨满',
-          key: 'SHAMAN',
-          status: false
-        },
-        {
-          name: '术士',
-          key: 'WARLOCK',
-          status: false
-        },
-        {
-          name: '战士',
-          key: 'WARRIOR',
-          status: false
-        },
-      ]
-    }
+    oClassMenu: [{
+        name: '小德',
+        key: 'DRUID',
+        status: false
+      },
+      {
+        name: '猎人',
+        key: 'HUNTER',
+        status: false
+      },
+      {
+        name: '法师',
+        key: 'MAGE',
+        status: false
+      },
+      {
+        name: '骑士',
+        key: 'PALADIN',
+        status: false
+      },
+      {
+        name: '牧师',
+        key: 'PRIEST',
+        status: false
+      },
+      {
+        name: '盗贼',
+        key: 'ROGUE',
+        status: false
+      },
+      {
+        name: '萨满',
+        key: 'SHAMAN',
+        status: false
+      },
+      {
+        name: '术士',
+        key: 'WARLOCK',
+        status: false
+      },
+      {
+        name: '战士',
+        key: 'WARRIOR',
+        status: false
+      },
+    ],
   },
 
   onLoad: function(options) {
     let that = this;
-    // 每次加载都重新请求 arena
-    // wx.removeStorageSync('arena');
     // 获取页面高度
     wx.getSystemInfo({
       success: function(res) {
@@ -320,7 +316,7 @@ Page({
 
   filterClasses: function(e) {
     let choose = e.currentTarget.dataset.classes;
-    let menu = this.data.oFilterSet.classesMenu;
+    let menu = this.data.oClassMenu;
     let res;
     for (let i in menu) {
       if (menu[i].key == choose) {
@@ -335,7 +331,7 @@ Page({
       }
     }
     this.setData({
-      ['oFilterSet.classesMenu']: menu
+      oClassMenu: menu
     })
     if (res) {
       this.setList(res);
@@ -345,14 +341,18 @@ Page({
   },
 
   resetFilter: function() {
-    let menu = this.data.oFilterSet.classesMenu;
+    let menu = this.data.oClassMenu;
     for (let i in menu) {
       menu[i].status = false;
     }
     this.setData({
-      ['oFilterSet.classesMenu']: menu
+      oClassMenu: menu
     });
     this.pagination(this.data.oArena.ALL, 1, this.data.oPages.sort);
+  },
+
+  clear: function() {
+    require('../../funtions.js').clearStorage('/pages/arena/arena', 'arena');
   },
 
 })

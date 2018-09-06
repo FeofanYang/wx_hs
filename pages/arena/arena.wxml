@@ -22,7 +22,6 @@
       <text class="cardCost {{item.rarity}}">{{item.cost}}</text>
       <view class="cardNameBg">
         <text class="cardName">{{item.name}}</text>
-        <!-- <image class="cardImg" src="https://art.hearthstonejson.com/v1/tiles/{{item.id}}.png"></image> -->
         <view class='cardImg' style="background-image:url(https://art.hearthstonejson.com/v1/tiles/{{item.id}}.png)"></view>
       </view>
     </view>
@@ -36,7 +35,10 @@
   <button bindtap='bindPagePrev' bindlongtap='bindPageFirst' disabled='{{oPages.curIndex<=1}}'>上页</button>
   <view>{{oPages.curIndex}}/{{oPages.allIndex}}</view>
   <button bindtap='bindPageNext' disabled='{{oPages.curIndex>=oPages.allIndex}}'>下页</button>
-  <button bindtap='moduleOpen' class='filterBtn'>
+  <button bindtap='clear' class='iconBox'>
+    <text class='iconfont icon-reload'></text>
+  </button>
+  <button bindtap='moduleOpen' class='iconBox'>
     <text class='iconfont icon-filter'></text>
   </button>
 </view>
@@ -47,7 +49,7 @@
   <view class='filterSection'>
     <text class='title'>职业</text>
     <view class='filterSelects'>
-      <view wx:for="{{oFilterSet.classesMenu}}" data-classes='{{item.key}}' bindtap='filterClasses' class='{{item.status}}'>{{item.name}}</view>
+      <view wx:for="{{oClassMenu}}" data-classes='{{item.key}}' bindtap='filterClasses' class='{{item.status}}'>{{item.name}}</view>
     </view>
   </view>
   <view class='filterBtns'>

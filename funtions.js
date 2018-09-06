@@ -179,7 +179,7 @@ function getCardsObj(deck, cards) {
 function clearStorage(url, storage) {
   wx.showModal({
     title: '清空本地缓存',
-    content: '此操作将清空本地缓存，可以解决绝大部分卡牌图片显示不全、卡组名空白等问题。\r\n设置缓存的目地是为了避免反复请求数据以节省您的流量。请勿频繁使用此功能。',
+    content: '此操作将清空本地缓存，可以解决绝大部分卡牌图片显示不全、卡组名空白、数据未更新等问题。\r\n注意：设置缓存的目地是为了避免反复请求数据以节省您的流量。请勿频繁使用此功能。',
     success: function(res) {
       if (res.confirm) {
         if (storage) {
