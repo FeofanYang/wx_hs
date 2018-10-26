@@ -33,6 +33,8 @@ function getDeckAndType(callback) {
             delete res.data[i]['collectible'];
             delete res.data[i]['flavor'];
             delete res.data[i]['text'];
+            delete res.data[i]['mechanics'];
+            delete res.data[i]['playRequirements'];
           }
           wx.setStorage({
             key: "cards",
@@ -67,7 +69,7 @@ function getDeckAndType(callback) {
           const compact = (arr) => arr.filter(v => v);
           for (let c in decks) {
             for (let d in decks[c]) {
-              if (parseInt(decks[c][d]['total_games']) < 1000) {
+              if (parseInt(decks[c][d]['total_games']) < 2500) {
                 delete decks[c][d];
               }
             }

@@ -128,6 +128,8 @@ Page({
               delete res.data[i]['collectible'];
               delete res.data[i]['flavor'];
               delete res.data[i]['text'];
+              delete res.data[i]['mechanics'];
+              delete res.data[i]['playRequirements'];
             }
             wx.setStorage({
               key: "cards",
@@ -194,7 +196,7 @@ Page({
         arena[classes][a].popularity = arena[classes][a].popularity.toFixed(2);
         arena[classes][a].count = arena[classes][a].count.toFixed(1);
         arena[classes][a].winrate = arena[classes][a].winrate.toFixed(1);
-        if (arena[classes][a].popularity < 0.05) {
+        if (arena[classes][a].popularity < 0.1) {
           delete arena[classes][a];
         } else {
           for (let i = 0; i < cards.length; i++) {
